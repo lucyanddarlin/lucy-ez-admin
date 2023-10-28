@@ -9,7 +9,7 @@ type Log struct {
 		Name      string
 		MaxSize   int
 		MaxBackup int
-		MaxAga    int
+		MaxAge    int
 		Compress  bool
 	}
 }

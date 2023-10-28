@@ -60,7 +60,7 @@ func New(conf *config.Log, srvName string) Logger {
 				Filename:   conf.File.Name,
 				MaxSize:    conf.File.MaxSize,
 				MaxBackups: conf.File.MaxBackup,
-				MaxAge:     conf.File.MaxAga,
+				MaxAge:     conf.File.MaxAge,
 				Compress:   conf.File.Compress,
 			}))
 		}
