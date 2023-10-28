@@ -30,6 +30,7 @@ type Config struct {
 // New 初始化配置
 func New() *Config {
 	flagPath := flag.String("c", "", "the config file path")
+	flag.Parse()
 
 	vp := viper.New()
 	conf := Config{

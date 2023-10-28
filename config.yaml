@@ -1,0 +1,12 @@
+service:
+  name: easy-admin # 服务名称
+  addr: :8080  #服务地址
+  debug: true  #是否开启debug
+  errorCode: 400 #默认失败的code
+  successCode: 200 #默认成功的code
+  title: easy-admin 后台管理系统 #系统名称
+  desc: 开放协作，拥抱未来，插件化编程实现 #系统描述
+  copyright: Copyright © 2023 lime.qlime.cn. All rights reserved. #版权信息
+  staticUrl: http://localhost:8080  #静态资源url
+  logo: http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image #系统logo
+  topMenu: false

@@ -3,7 +3,7 @@ package config
 import "time"
 
 type Orm struct {
-	Enable        string
+	Enable        bool
 	Drive         string
 	Name          string
 	Dsn           string
