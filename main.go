@@ -12,14 +12,14 @@ func main() {
 	// 创建 gin 引擎
 	engine := gin.New()
 
-	// 初始化静态资源
-	engine.Static("/static", "./static")
-
 	// 核心组件初始化
 	core.Init()
 
 	// 进行系统初始化
 	install.Init()
+
+	// 初始化静态资源
+	engine.Static("/static", "./static")
 
 	// 启动服务
 	srv := core.GlobalConfig().Service

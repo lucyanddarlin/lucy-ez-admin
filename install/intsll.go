@@ -3,6 +3,7 @@ package install
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
 	"gorm.io/gorm"
 )
 
@@ -18,13 +19,12 @@ type install struct {
 
 func Init() {
 	ins := install{
-		ms: []Model{},
-		db: core.GlobalOrm().GetDB("da"),
-	}
-
-	// TODO: 即将删除
-	if len(ins.ms) == 0 {
-		panic("ins.ms 为空")
+		ms: []Model{
+			&model.Team{},
+			&model.Role{},
+			&model.User{},
+		},
+		db: core.GlobalOrm().GetDB(model.DBName()),
 	}
 
 	// 判断是否安装
@@ -41,7 +41,7 @@ func Init() {
 
 func (ins *install) Install() error {
 	for _, tb := range ins.ms {
-		if err := ins.db.Set("gorm:table_options", "ENGINE=InnodDB").Migrator().AutoMigrate(tb); err != nil {
+		if err := ins.db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().AutoMigrate(tb); err != nil {
 			return err
 		}
 		if err := tb.InitData(core.New(&gin.Context{})); err != nil {
