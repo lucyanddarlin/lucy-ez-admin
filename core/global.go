@@ -4,6 +4,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/config"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/redis"
 )
 
 var (
@@ -14,6 +15,7 @@ type global struct {
 	config *config.Config
 	logger logger.Logger
 	orm    orm.Orm
+	redis  redis.Redis
 }
 
 func initGlobal(config *config.Config, opts ...option) {

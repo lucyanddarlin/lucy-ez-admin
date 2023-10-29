@@ -6,6 +6,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/config"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/redis"
 )
 
 func Init() {
@@ -31,7 +32,13 @@ func initInstance(conf *config.Config) {
 	loggerIns := logger.New(conf.Log, conf.Service.Name)
 	// 数据库
 	ormIns := orm.New(conf.Orm, loggerIns)
+	// redis
+	redisIns := redis.New(conf.Redis)
 
 	// 实例化到全局对象
-	initGlobal(conf, withLogger(loggerIns), withOrm(ormIns))
+	initGlobal(conf,
+		withLogger(loggerIns),
+		withOrm(ormIns),
+		WithRedis(redisIns),
+	)
 }

@@ -37,3 +37,10 @@ orm:
     slowThreshold: 2s #慢sql阈值
     replicas:   #从数据库，主要用来读取数据
         - root:lucy@tcp(127.0.0.1:3306)/hello?charset=utf8mb4&parseTime=True&loc=Local
+# redis相关配置
+redis:
+  - enable: true
+    name: cache
+    host: 127.0.0.1:6379 #redis地址
+    username:  #连接账号
+    password:  #连接密码
