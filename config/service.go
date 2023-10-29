@@ -4,7 +4,7 @@ type Service struct {
 	Name        string `json:"name"`
 	Addr        string `json:"addr"`
 	Debug       string `json:"debug"`
-	ErrorCode   string `json:"errorCode"`
+	ErrorCode   int    `json:"errorCode"`
 	SuccessCode int    `json:"successCode"`
 	Title       string `json:"title"`
 	Desc        string `json:"desc"`

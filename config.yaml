@@ -1,10 +1,10 @@
 service:
-  name: lucy-ez-admin # 服务名称
+  name: lucy-ez-admin-new # 服务名称
   addr: :8081  #服务地址
   debug: true  #是否开启debug
   errorCode: 400 #默认失败的code
   successCode: 200 #默认成功的code
-  title: easy-admin 后台管理系统 #系统名称
+  title: lucy-easy-admin 后台管理系统 #系统名称
   desc: 开放协作，拥抱未来，插件化编程实现 #系统描述
   copyright: Copyright © 2023 lime.qlime.cn. All rights reserved. #版权信息
   staticUrl: http://localhost:8081  #静态资源url
@@ -44,3 +44,33 @@ redis:
     host: 127.0.0.1:6379 #redis地址
     username:  #连接账号
     password:  #连接密码
+#中间件相关配置
+middleware: 
+  pprof: #pprof分析工具
+    enable: true #是否开启pprof
+    query: secret #访问携带密钥的key url?secret=xxx
+    secret: limeschool
+  rateLimit:
+    enable: true #是否开启限流
+    limit: 100 #最大访问 limit/s
+  ipLimit: #ip限流
+    enable: true #是否开启ip限流
+    cache: cache #redis名称
+    limit: 20  #窗口时间内，最大访问次数
+    window: 1s #窗口时间
+  cupLoadShedding: #自适应降载
+    enable: true #是否开启自适应降载
+    threshold: 950 #cpu阈值
+    bucket: 50 #桶大小
+    window: 5s #窗口时间
+  cors:
+    enable: true
+    allowHeader: "Content-Type, Content-Length, Authorization" #允许准入的header
+    allowMethod: "POST, GET, OPTIONS, PUT, DELETE, UPDATE, PATCH" #允许准入的方法
+    allowOrigin: "*" #允许准入的域名
+    exposeHeader: "Content-Length, Access-Control-Allow-Headers"  #暴露的header
+    credentials: true
+  requestLog:
+    enable: true #是否开启请求日志
+    whitelist:  # 请求日志跳过名单
+      post:/api/system/captcha: true

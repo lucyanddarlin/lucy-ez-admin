@@ -92,7 +92,7 @@ func (c *Config) Watch(f func(c *Config)) {
 		if err := c.v.Unmarshal(&c); err != nil {
 			fmt.Printf("配置变更失败: %v", err.Error())
 		} else {
-			fmt.Printf("配置变更失败")
+			fmt.Println("配置变更成功!")
 			f(c)
 		}
 	})
