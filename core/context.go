@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lucyanddarlin/lucy-ez-admin/config"
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/http"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
@@ -92,4 +93,16 @@ func (ctx *Context) SourceCtx() context.Context {
 		c = context.WithValue(c, key, val)
 	}
 	return c
+}
+
+func (c *Context) ImageCaptcha(name string) captcha.Image {
+	return g.captcha.Image(c.ClientIP(), name)
+}
+
+func (c *Context) ClientIP() string {
+	ip := c.Context.ClientIP()
+	if ip == "::1" {
+		ip = c.GetHeader("X-Real-IP")
+	}
+	return ip
 }

@@ -11,6 +11,9 @@ func Init(engine *gin.RouterGroup) {
 		// 获取系统信息
 		api.GET("/config", handler.Config)
 
+		// 发送验证码
+		api.POST("/captcha", handler.Captcha)
+
 		// 用户其他操作
 		api.POST("/user/login", handler.UserLogin)
 	}
