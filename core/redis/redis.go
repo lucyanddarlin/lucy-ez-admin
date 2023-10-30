@@ -29,7 +29,7 @@ type Redis interface {
 	//  @param 实例名称
 	//  @return *redis.Client
 	//  @return error
-	GetName(name string) *redis.Client
+	GetRedis(name string) *redis.Client
 }
 
 func New(rc []config.Redis) Redis {
@@ -73,7 +73,7 @@ func (r *rd) Get(name string) (*redis.Client, error) {
 }
 
 // GetName implements Redis.
-func (r *rd) GetName(name string) *redis.Client {
+func (r *rd) GetRedis(name string) *redis.Client {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
