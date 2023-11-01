@@ -1,5 +1,24 @@
 package types
 
+import "gorm.io/gorm"
+
+type PageOptions struct {
+	Page     int
+	PageSize int
+	Model    any
+	Scopes   func(db *gorm.DB) *gorm.DB
+}
+
+type AllOptions struct {
+	Model  any
+	Scopes func(db *gorm.DB) *gorm.DB
+}
+
+type CreateModel struct {
+	ID       int64 `json:"id" gorm:"primary_key;autoIncrement;size:32;comment:主键ID"`
+	CreateAt int64 `json:"create_at,omitempty" gorm:"index;comment:创建时间"`
+}
+
 type BaseModel struct {
 	ID        int64 `json:"id" gorm:"primary_key;autoIncrement;size:32;comment:主键ID"`
 	CreatedAt int64 `json:"created_at,omitempty" gorm:"index;comment:创建时间"`
