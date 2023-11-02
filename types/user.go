@@ -11,3 +11,8 @@ type UserLoginRequest struct {
 type UserLoginResponse struct {
 	Token string `json:"token"`
 }
+
+type Password struct {
+	Password string `json:"password"`
+	Time     int64  `json:"time"`
+}

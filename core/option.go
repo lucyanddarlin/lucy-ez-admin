@@ -2,6 +2,7 @@ package core
 
 import (
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/email"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
@@ -38,4 +39,11 @@ func WithCaptcha(captcha captcha.Captcha) option {
 	return func(g *global) {
 		g.captcha = captcha
 	}
+}
+
+func WithCert(cert cert.Cert) option {
+	return func(g *global) {
+		g.cert = cert
+	}
+
 }

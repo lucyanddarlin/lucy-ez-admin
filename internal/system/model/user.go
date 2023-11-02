@@ -33,6 +33,21 @@ func (u *User) TableName() string {
 	return "tb_system_user"
 }
 
+// OnePyPhone 通过 phone 查询用户信息
+func (u *User) OneByPhone(ctx *core.Context, phone string) error {
+	db := database(ctx).Preload("Role").Preload("Team")
+	return transferErr(db.First(u, "phone=?", phone).Error)
+}
+
+// PasswordByPhone 查询全部字段信息包括密码
+func (u *User) PasswordByPhone(ctx *core.Context, phone string) (string, error) {
+	m := map[string]any{}
+	if err := database(ctx).First(u, "phone=?", phone).Scan(&m).Error; err != nil {
+		return "", transferErr(err)
+	}
+	return m["password"].(string), nil
+}
+
 func (u *User) InitData(ctx *core.Context) error {
 	ins := User{
 		BaseModel:   types.BaseModel{ID: 1, CreatedAt: time.Now().Unix()},

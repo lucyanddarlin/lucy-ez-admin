@@ -23,6 +23,7 @@ func Init() {
 			&model.Team{},
 			&model.Role{},
 			&model.User{},
+			&model.LoginLog{},
 		},
 		db: core.GlobalOrm().GetDB(model.DBName()),
 	}

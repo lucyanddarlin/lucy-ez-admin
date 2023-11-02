@@ -5,6 +5,7 @@ import (
 
 	"github.com/lucyanddarlin/lucy-ez-admin/config"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/email"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
@@ -40,6 +41,8 @@ func initInstance(conf *config.Config) {
 	emailIns := email.New(conf.Email)
 	// 验证码
 	captchaIns := captcha.New(conf.Captcha, redisIns, emailIns)
+	// 证书
+	certIns := cert.New(conf.Cert)
 
 	// 实例化到全局对象
 	initGlobal(conf,
@@ -48,5 +51,6 @@ func initInstance(conf *config.Config) {
 		WithRedis(redisIns),
 		WithEmail(emailIns),
 		WithCaptcha(captchaIns),
+		WithCert(certIns),
 	)
 }

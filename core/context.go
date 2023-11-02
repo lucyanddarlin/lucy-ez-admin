@@ -8,6 +8,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/config"
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/http"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
@@ -44,6 +45,11 @@ func (ctx *Context) Release() {
 // Config 获取配置文件信息
 func (ctx *Context) Config() *config.Config {
 	return g.config
+}
+
+// Cert 获取证书实例
+func (ctx *Context) Cert() cert.Cert {
+	return g.cert
 }
 
 // TranceID 获取链路日志 ID

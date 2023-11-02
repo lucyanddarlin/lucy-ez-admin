@@ -5,6 +5,7 @@ import (
 
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 	"google.golang.org/protobuf/proto"
 )
@@ -26,6 +27,69 @@ type Role struct {
 
 func (r *Role) TableName() string {
 	return "tb_system_role"
+}
+
+func (r *Role) ID() int64 {
+	return r.BaseModel.ID
+}
+
+func (r *Role) Parent() int64 {
+	return r.ParentID
+}
+
+func (r *Role) AppendChildren(child any) {
+	menu := child.(*Role)
+	r.Children = append(r.Children, menu)
+}
+
+func (r *Role) ChildrenNode() []tree.Tree {
+	var list []tree.Tree
+	for _, item := range r.Children {
+		list = append(list, item)
+	}
+	return list
+}
+
+// RoleStatus 获取角色状态
+func (r *Role) RoleStatus(ctx *core.Context, roleID int64) bool {
+	team, err := r.Tree(ctx, 1)
+	if err != nil {
+		return false
+	}
+	res := false
+	dfsRoleStatus(team.(*Role), roleID, true, &res)
+	return res
+}
+
+func dfsRoleStatus(role *Role, roleID int64, status bool, res *bool) bool {
+	if roleID == role.BaseModel.ID {
+		is := *role.Status && status
+		*res = is
+	}
+	for _, item := range role.Children {
+		dfsRoleStatus(item, roleID, status && *item.Status, res)
+	}
+	return status
+}
+
+// Tree 查询指定角色为根节点角色树
+func (r *Role) Tree(ctx *core.Context, roleID int64) (tree.Tree, error) {
+	list, err := r.All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var treeList []tree.Tree
+	for _, item := range list {
+		treeList = append(treeList, item)
+	}
+	return tree.BuildTreeByID(treeList, roleID), nil
+
+}
+
+func (r *Role) All(ctx *core.Context, cond ...any) ([]*Role, error) {
+	var list []*Role
+	return list, transferErr(database(ctx).Order("weight desc").Find(&list, cond...).Error)
+
 }
 
 func (r *Role) InitData(ctx *core.Context) error {

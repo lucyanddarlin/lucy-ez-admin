@@ -3,6 +3,7 @@ package core
 import (
 	"github.com/lucyanddarlin/lucy-ez-admin/config"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/email"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
@@ -20,6 +21,7 @@ type global struct {
 	redis   redis.Redis
 	email   email.Email
 	captcha captcha.Captcha
+	cert    cert.Cert
 }
 
 func initGlobal(config *config.Config, opts ...option) {

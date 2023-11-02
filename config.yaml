@@ -1,3 +1,8 @@
+cert:
+  - name: decodePassword  #证书名
+    path: cert/private.pem #证书路径
+  - name: encodePassword
+    path: cert/public.pem
 service:
   name: lucy-ez-admin-new # 服务名称
   addr: :8083  #服务地址
