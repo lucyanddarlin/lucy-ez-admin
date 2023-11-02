@@ -108,6 +108,9 @@ func (ctx *Context) SourceCtx() context.Context {
 	return c
 }
 
+// ImageCaptcha 生成图片验证码实例
+//
+//	@param name 验证码模板名称
 func (ctx *Context) ImageCaptcha(name string) captcha.Image {
 	return g.captcha.Image(ctx.ClientIP(), name)
 }

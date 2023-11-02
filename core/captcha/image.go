@@ -98,7 +98,7 @@ func (i *image) Verify(id, answer string) error {
 	// 获取当前用户的场景唯一 id
 	cid := i.captcha.cid(i.ip, i.name, i.tp)
 
-	// 获取用户当前的验证码场景 id
+	// 获取用户当前的验证码 id
 	sid, err := cache.Get(context.Background(), cid).Result()
 	if err != nil {
 		return err

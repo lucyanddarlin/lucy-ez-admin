@@ -14,13 +14,15 @@ import (
 )
 
 const (
-	encodePasswordCert = "encodePassword"
-	decodePasswordCert = "decodePassword"
+	encodePasswordCert  = "encodePassword"
+	decodePasswordCert  = "decodePassword"
+	passwordExpiredTime = 10 * 1000
 )
 
 // UserLogin 用户登录
 func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserLoginResponse, err error) {
 	resp = new(types.UserLoginResponse)
+	// 函数返回时的错误处理
 	defer func() {
 		if !(errors.Is(err, errors.UserDisableError) || errors.Is(err, errors.CaptchaError)) {
 			_ = AddLoginLog(ctx, in.Phone, err)
@@ -49,7 +51,7 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 	}
 
 	// 判断当前时间戳是否过期,超过 10s 则拒绝
-	if time.Now().UnixMilli()-pw.Time > 10*1000 {
+	if time.Now().UnixMilli()-pw.Time > passwordExpiredTime {
 		err = errors.PasswordExpireError
 		return
 	}

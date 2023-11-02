@@ -12,6 +12,7 @@ func UserLogin(c *gin.Context) {
 	ctx := core.New(c)
 	defer ctx.Release()
 
+	// 创建参数 struct, 定义 captchaName 对应模板 login
 	in := types.UserLoginRequest{
 		CaptchaName: "login",
 	}
