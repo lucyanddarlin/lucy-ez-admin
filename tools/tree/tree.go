@@ -13,7 +13,7 @@ func BuildTree(array []Tree) Tree {
 	for i := 0; i < maxLen; i++ {
 		count := 0
 		for j := 0; j < maxLen; j++ {
-			if array[j].ID() == array[j].Parent() {
+			if array[j].ID() == array[i].Parent() {
 				count++
 				array[j].AppendChildren(array[i])
 			}
@@ -31,12 +31,12 @@ func BuildTreeByID(array []Tree, id int64) Tree {
 	for i := 0; i < maxLen; i++ {
 		count := 0
 		for j := 0; j < maxLen; j++ {
-			if array[j].ID() == array[j].Parent() {
+			if array[j].ID() == array[i].Parent() {
 				count++
 				array[j].AppendChildren(array[i])
 			}
 		}
-		if array[i].Parent() == id {
+		if array[i].ID() == id {
 			rootNode = array[i]
 		}
 	}

@@ -10,7 +10,9 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/http"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/jwt"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/redis"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 	"go.uber.org/zap"
 )
@@ -72,6 +74,11 @@ func (ctx *Context) Orm() orm.Orm {
 	return g.orm
 }
 
+// Redis 获取 Redis
+func (ctx *Context) Redis() redis.Redis {
+	return g.redis
+}
+
 // Http 获取请求器
 func (ctx *Context) Http() http.Request {
 	return http.New(ctx.Config().Http, ctx.Logger())
@@ -101,14 +108,20 @@ func (ctx *Context) SourceCtx() context.Context {
 	return c
 }
 
-func (c *Context) ImageCaptcha(name string) captcha.Image {
-	return g.captcha.Image(c.ClientIP(), name)
+func (ctx *Context) ImageCaptcha(name string) captcha.Image {
+	return g.captcha.Image(ctx.ClientIP(), name)
 }
 
-func (c *Context) ClientIP() string {
-	ip := c.Context.ClientIP()
+func (ctx *Context) ClientIP() string {
+	ip := ctx.Context.ClientIP()
 	if ip == "::1" {
-		ip = c.GetHeader("X-Real-IP")
+		ip = ctx.GetHeader("X-Real-IP")
 	}
 	return ip
+}
+
+func (ctx *Context) Jwt() jwt.JWT {
+	conf := ctx.Config().JWT
+	token := ctx.Gin().GetHeader(conf.Header)
+	return jwt.New(conf, ctx.Redis(), token)
 }

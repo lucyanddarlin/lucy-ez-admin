@@ -106,3 +106,18 @@ captcha:
     length: 6 #验证码长度
     expire: 180s #过期时间
     cache: cache #redis名称
+# jwt 身份验证
+jwt:
+  enable: true #是否开启jwt
+  header: Authorization #jwt验证header
+  secret: limeSchool #密钥
+  cache: cache #redis名称
+  expire: 30s #过期时间
+  renewal: 2h #续期时间
+  unique: true #是否唯一设备登陆
+  whitelist: #忽略token校验以及鉴权的白名单
+    post:/api/system/token/refresh: true
+    post:/api/system/captcha: true
+    post:/api/system/user/login: true
+    get:/api/system/config: true
+    post:/api/system/user/logout: true

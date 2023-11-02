@@ -17,7 +17,7 @@ type image struct {
 }
 
 type Image interface {
-	// New 发送验证码
+	// New 生成图片验证码
 	//
 	//  @param ip: 用户 ip, 防止同一个用户多次发送验证码
 	//  @return res: 验证码 id,验证码图片 base64 编码,过期时间
@@ -93,7 +93,7 @@ func (i *image) Verify(id, answer string) error {
 	}
 
 	// 获取验证码存储器
-	cache := i.captcha.cache.GetRedis(cp.Name)
+	cache := i.captcha.cache.GetRedis(cp.Cache)
 
 	// 获取当前用户的场景唯一 id
 	cid := i.captcha.cid(i.ip, i.name, i.tp)

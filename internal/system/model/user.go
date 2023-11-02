@@ -48,6 +48,11 @@ func (u *User) PasswordByPhone(ctx *core.Context, phone string) (string, error) 
 	return m["password"].(string), nil
 }
 
+// UpdateLastLogin 更新最新登录时间
+func (u *User) UpdateLastLogin(ctx *core.Context, t int64) error {
+	return transferErr(database(ctx).Model(u).Where("id", u.ID).Update("last_login", t).Error)
+}
+
 func (u *User) InitData(ctx *core.Context) error {
 	ins := User{
 		BaseModel:   types.BaseModel{ID: 1, CreatedAt: time.Now().Unix()},

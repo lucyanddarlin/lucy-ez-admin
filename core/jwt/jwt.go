@@ -33,10 +33,10 @@ type JWT interface {
 	CheckUnique(userID int64) bool
 }
 
-func New(conf config.JWT, rd rd.Redis, token string) JWT {
+func New(conf *config.JWT, rd rd.Redis, token string) JWT {
 	return &jwt{
 		redis: rd.GetRedis(conf.Cache),
-		conf:  &conf,
+		conf:  conf,
 		token: token,
 	}
 }
@@ -95,7 +95,7 @@ func (j *jwt) Create(userID int64, data *types.Metadata) (string, error) {
 	claims["exp"] = time.Now().Unix() + int64(j.conf.Expire.Seconds())
 	claims["iat"] = time.Now().Unix()
 	claims["data"] = data
-	tokenJwt := jv4.New(jv4.SigningMethodES256)
+	tokenJwt := jv4.New(jv4.SigningMethodHS256)
 	tokenJwt.Claims = claims
 	token, err := tokenJwt.SignedString([]byte(j.conf.Secret))
 	if err != nil {
@@ -113,6 +113,8 @@ func (j jwt) IsExist(userId int64) bool {
 }
 
 // IsWhiteList implements JWT.
+//
+// 初始化白名单
 func (j jwt) IsWhiteList(method string, path string) bool {
 	return j.conf.WhiteList[strings.ToLower(method+":"+path)]
 }

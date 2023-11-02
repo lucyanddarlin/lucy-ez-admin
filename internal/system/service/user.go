@@ -9,6 +9,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
 
@@ -48,10 +49,10 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 	}
 
 	// 判断当前时间戳是否过期,超过 10s 则拒绝
-	if time.Now().UnixMilli()-pw.Time > 10*1000 {
-		err = errors.PasswordExpireError
-		return
-	}
+	// if time.Now().UnixMilli()-pw.Time > 100*1000 {
+	// 	err = errors.PasswordExpireError
+	// 	return
+	// }
 
 	in.Password = pw.Password
 
@@ -77,6 +78,31 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 
 	// 所属角色被禁用则拒绝登录
 	role := model.Role{}
-	// if role.
+	if !role.RoleStatus(ctx, user.RoleID) {
+		err = errors.RoleDisableError
+		return
+	}
+
+	// 对比用户密码
+	if !tools.CompareHashPwd(password, in.Password) {
+		err = errors.PasswordError
+		return
+	}
+
+	// 生成登陆的 token
+	if resp.Token, err = ctx.Jwt().Create(user.ID, &types.Metadata{
+		UserID:    user.ID,
+		RoleID:    user.RoleID,
+		RoleKey:   user.Role.Keyword,
+		DataScope: user.Role.DataScope,
+		Username:  user.Name,
+		TeamID:    user.TeamID,
+	}); err != nil {
+		return nil, err
+	}
+
+	// // 修改登录时间
+	return resp, user.UpdateLastLogin(ctx, time.Now().Unix())
+	// return resp, nil
 
 }

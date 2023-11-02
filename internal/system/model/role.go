@@ -83,7 +83,6 @@ func (r *Role) Tree(ctx *core.Context, roleID int64) (tree.Tree, error) {
 		treeList = append(treeList, item)
 	}
 	return tree.BuildTreeByID(treeList, roleID), nil
-
 }
 
 func (r *Role) All(ctx *core.Context, cond ...any) ([]*Role, error) {
