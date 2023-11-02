@@ -49,10 +49,10 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 	}
 
 	// 判断当前时间戳是否过期,超过 10s 则拒绝
-	// if time.Now().UnixMilli()-pw.Time > 100*1000 {
-	// 	err = errors.PasswordExpireError
-	// 	return
-	// }
+	if time.Now().UnixMilli()-pw.Time > 10*1000 {
+		err = errors.PasswordExpireError
+		return
+	}
 
 	in.Password = pw.Password
 
@@ -103,6 +103,5 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 
 	// // 修改登录时间
 	return resp, user.UpdateLastLogin(ctx, time.Now().Unix())
-	// return resp, nil
 
 }
