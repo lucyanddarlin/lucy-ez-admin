@@ -30,6 +30,7 @@ type Captcha interface {
 	Image(ip, name string) Image
 }
 
+// New 初始化 captcha 实例
 func New(cs []config.Captcha, rs redis.Redis, email e.Email) Captcha {
 	cpIns := captcha{
 		cache: rs,
@@ -41,6 +42,7 @@ func New(cs []config.Captcha, rs redis.Redis, email e.Email) Captcha {
 	cpIns.mu.Lock()
 	defer cpIns.mu.Unlock()
 
+	// 配置 Config.Captcha 中的每个配置项存储至 m 中
 	for _, item := range cs {
 		cpIns.m[item.Name+":"+item.Type] = item
 	}

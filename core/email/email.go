@@ -56,6 +56,7 @@ func New(conf *config.Email) Email {
 	emailIns.mu.Lock()
 	defer emailIns.mu.Unlock()
 
+	// 从 Config.Email 配置项中读取
 	for _, item := range conf.Template {
 		file, err := os.Open(item.Src)
 		if err != nil {
@@ -65,6 +66,7 @@ func New(conf *config.Email) Email {
 		if err != nil {
 			panic("邮箱模板读取失败" + err.Error())
 		}
+		// 读取成功后,存储至 emailIns.template
 		emailIns.template[item.Name] = struct {
 			subject string
 			html    string

@@ -79,6 +79,7 @@ func New() *Config {
 	// 是否为远程获取配置
 	conf.isRemote = *flagPath == ""
 
+	// 解析 config.yaml 配置内容
 	if err := vp.Unmarshal(&conf); err != nil {
 		panic("配置初始化失败" + err.Error())
 	}

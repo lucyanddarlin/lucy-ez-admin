@@ -120,5 +120,4 @@ func (i *image) Verify(id, answer string) error {
 
 	// 验证通过,清除缓存
 	return cache.Del(context.Background(), id).Err()
-
 }
