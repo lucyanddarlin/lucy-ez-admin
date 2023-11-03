@@ -8,6 +8,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
 
+// UserLogin 用户登录
 func UserLogin(c *gin.Context) {
 	ctx := core.New(c)
 	defer ctx.Release()
@@ -25,5 +26,17 @@ func UserLogin(c *gin.Context) {
 		ctx.RespError(err)
 	} else {
 		ctx.RespData(resp)
+	}
+}
+
+// UserLogout 用户登出
+func UserLogout(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	if err := service.UserLogout(ctx); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
 	}
 }

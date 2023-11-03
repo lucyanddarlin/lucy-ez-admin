@@ -51,10 +51,11 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 	}
 
 	// 判断当前时间戳是否过期,超过 10s 则拒绝
-	if time.Now().UnixMilli()-pw.Time > passwordExpiredTime {
-		err = errors.PasswordExpireError
-		return
-	}
+	// TODO: 后期开启
+	// if time.Now().UnixMilli()-pw.Time > passwordExpiredTime {
+	// 	err = errors.PasswordExpireError
+	// 	return
+	// }
 
 	in.Password = pw.Password
 
@@ -106,4 +107,13 @@ func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserL
 	// // 修改登录时间
 	return resp, user.UpdateLastLogin(ctx, time.Now().Unix())
 
+}
+
+// UserLogout 用户退出登录
+func UserLogout(ctx *core.Context) error {
+	metadata, _ := ctx.Jwt().Parse()
+	if metadata != nil {
+		return ctx.Jwt().Clear(metadata.UserID)
+	}
+	return nil
 }

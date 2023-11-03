@@ -152,7 +152,6 @@ func (j jwt) Parse() (*types.Metadata, *jwtErr) {
 
 	// 成功返回
 	return &data, nil
-
 }
 
 // Store implements JWT.
