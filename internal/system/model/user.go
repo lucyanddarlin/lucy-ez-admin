@@ -33,6 +33,12 @@ func (u *User) TableName() string {
 	return "tb_system_user"
 }
 
+// OneByID 通过 id 查询用户信息
+func (u *User) OneByID(ctx *core.Context, id int64) error {
+	db := database(ctx).Preload("Role").Preload("Team")
+	return transferErr(db.First(u, id).Error)
+}
+
 // OnePyPhone 通过 phone 查询用户信息
 func (u *User) OneByPhone(ctx *core.Context, phone string) error {
 	db := database(ctx).Preload("Role").Preload("Team")

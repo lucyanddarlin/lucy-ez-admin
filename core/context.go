@@ -115,6 +115,11 @@ func (ctx *Context) ImageCaptcha(name string) captcha.Image {
 	return g.captcha.Image(ctx.ClientIP(), name)
 }
 
+// EmailCaptcha 生成邮件验证码实例
+func (ctx *Context) EmailCaptcha(name string) captcha.Email {
+	return g.captcha.Email(ctx.ClientIP(), name)
+}
+
 func (ctx *Context) ClientIP() string {
 	ip := ctx.Context.ClientIP()
 	if ip == "::1" {

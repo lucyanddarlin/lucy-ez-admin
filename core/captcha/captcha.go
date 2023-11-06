@@ -28,6 +28,7 @@ type captcha struct {
 
 type Captcha interface {
 	Image(ip, name string) Image
+	Email(ip, name string) Email
 }
 
 // New 初始化 captcha 实例
@@ -77,6 +78,18 @@ func (c *captcha) Image(ip string, name string) Image {
 	return &image{
 		name:    name,
 		tp:      "image",
+		captcha: c,
+		ip:      ip,
+	}
+}
+
+// Email implements Captcha.
+//
+// 实例化邮箱验证码
+func (c *captcha) Email(ip string, name string) Email {
+	return &email{
+		name:    name,
+		tp:      "email",
 		captcha: c,
 		ip:      ip,
 	}
