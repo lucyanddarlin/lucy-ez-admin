@@ -117,3 +117,26 @@ func UserLogout(ctx *core.Context) error {
 	}
 	return nil
 }
+
+// RefreshToken 用户刷新 token
+func RefreshToken(ctx *core.Context) (*types.UserLoginResponse, error) {
+	md, err := ctx.Jwt().Parse()
+	if md == nil {
+		return nil, errors.MetadataError
+	}
+	if err == nil {
+		return nil, errors.RefreshActiveTokenError
+	}
+	if !err.CanRenewal() {
+		return nil, errors.RefTokenExpiredError
+	}
+
+	token, e := ctx.Jwt().Create(md.UserID, md)
+	if e != nil {
+		return nil, e
+	}
+
+	return &types.UserLoginResponse{
+		Token: token,
+	}, e
+}

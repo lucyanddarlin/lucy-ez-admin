@@ -40,3 +40,15 @@ func UserLogout(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// RefreshToken 刷新 token
+func RefreshToken(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	if resp, err := service.RefreshToken(ctx); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespData(resp)
+	}
+}
