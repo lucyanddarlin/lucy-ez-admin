@@ -18,5 +18,6 @@ func Init(engine *gin.RouterGroup) {
 		api.POST("/user/login", handler.UserLogin)
 		api.POST("/user/logout", handler.UserLogout)
 		api.POST("/token/refresh", handler.RefreshToken)
+		api.GET("/login/log", handler.LoginLog)
 	}
 }

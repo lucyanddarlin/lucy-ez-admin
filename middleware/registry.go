@@ -23,8 +23,12 @@ func Registry(engine *gin.Engine) *gin.RouterGroup {
 	engine.Use(Trance(), Recovery())
 
 	api := engine.Group("api")
+
 	// 开启请求日志
 	api.Use(RequestLog())
+
+	// 开启 jwt 鉴权
+	api.Use(JwtAuth())
 
 	return api
 
