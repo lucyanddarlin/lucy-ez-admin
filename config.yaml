@@ -86,9 +86,11 @@ email:
       subject: 验证码发送通知 #邮件模板主题
       src: template/email/default.html #邮件模板路径
   company: 青柠校园 #发送单位名称
-  user: 860808187@qq.com #发送者
+  # user: 860808187@qq.com #发送者
+  user: 1194486835@qq.com #发送者
   host: smtp.qq.com:25 #发送host
-  password: ersukmsstobebdef # 发送host密码
+  # password: ersukmsstobebdef # 发送host密码
+  password: rqkbnpomhnqziedf # 发送host密码
 #验证码相关配置
 captcha:
   - name: login #验证码名称
