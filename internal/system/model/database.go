@@ -25,6 +25,7 @@ var DataMap = map[string]string{
 func database(ctx *core.Context) *gorm.DB {
 	return ctx.Orm().GetDB(_orm).WithContext(ctx.SourceCtx())
 }
+
 func transferErr(err error) error {
 	return tools.TransferErr(DataMap, err)
 }

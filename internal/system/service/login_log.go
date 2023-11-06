@@ -33,3 +33,12 @@ func AddLoginLog(ctx *core.Context, phone string, err error) error {
 	}
 	return log.Create(ctx)
 }
+
+func PageLoginLog(ctx *core.Context, in *types.LoginLogRequest) ([]model.LoginLog, int64, error) {
+	log := model.LoginLog{}
+	return log.Page(ctx, types.PageOptions{
+		Page:     in.Page,
+		PageSize: in.PageSize,
+		Model:    in,
+	})
+}

@@ -15,8 +15,8 @@ type AllOptions struct {
 }
 
 type CreateModel struct {
-	ID       int64 `json:"id" gorm:"primary_key;autoIncrement;size:32;comment:主键ID"`
-	CreateAt int64 `json:"create_at,omitempty" gorm:"index;comment:创建时间"`
+	ID        int64 `json:"id" gorm:"primary_key;autoIncrement;size:32;comment:主键ID"`
+	CreatedAt int64 `json:"created_at,omitempty" gorm:"index;comment:创建时间"`
 }
 
 type BaseModel struct {
