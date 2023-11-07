@@ -64,3 +64,16 @@ func CurUser(c *gin.Context) {
 		ctx.RespData(user)
 	}
 }
+
+// UpdateUser 更新用户
+func UpdateUser(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.UpdateUserRequest{}
+	if ctx.ShouldBindJSON(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+}

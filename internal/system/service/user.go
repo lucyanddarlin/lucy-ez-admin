@@ -151,3 +151,28 @@ func CurrentUser(ctx *core.Context) (*model.User, error) {
 	user := model.User{}
 	return &user, user.OneByID(ctx, md.UserID)
 }
+
+// UpdateUser 更新用户信息
+func UpdateUser(ctx *core.Context, in *types.UpdateUserRequest) error {
+	user := model.User{}
+	if user.OneByID(ctx, in.ID) != nil {
+		return errors.DBNotFoundError
+	}
+
+	// 超级管理员不允许修改所在部门和角色
+	if in.ID == 1 {
+		in.RoleID = 0
+		in.TeamID = 0
+		if *user.Status != *in.Status {
+			return errors.SuperAdminDelError
+		}
+	}
+
+	// 修改角色时, 也只允许修改到自己所在管辖的角色
+	if in.RoleID != 0 && in.RoleID != user.RoleID {
+		return errors.New("tdb")
+	}
+
+	return nil
+
+}

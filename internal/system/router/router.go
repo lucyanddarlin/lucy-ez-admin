@@ -19,6 +19,7 @@ func Init(engine *gin.RouterGroup) {
 
 		// 用户操作
 		api.GET("/user", handler.CurUser)
+		api.PUT("/user", handler.UpdateUser)
 
 		// 用户其他操作
 		api.POST("/user/login", handler.UserLogin)
