@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
 
@@ -17,8 +18,45 @@ type Team struct {
 	Children    []*Team `json:"children,omitempty" gorm:"-"`
 }
 
+func (t *Team) ID() int64 {
+	return t.BaseModel.ID
+}
+
+func (t *Team) Parent() int64 {
+	return t.ParentID
+}
+
+func (t *Team) AppendChildren(child any) {
+	team := child.(*Team)
+	t.Children = append(t.Children, team)
+}
+
+func (t *Team) ChildrenNode() []tree.Tree {
+	var list []tree.Tree
+	for _, item := range t.Children {
+		list = append(list, item)
+	}
+	return list
+}
+
 func (t *Team) TableName() string {
 	return "tb_system_team"
+}
+
+// Tree 获取部门树
+func (t *Team) Tree(ctx *core.Context) (tree.Tree, error) {
+	// 获取部门列表
+	list := make([]*Team, 0)
+	if err := database(ctx).Find(&list).Error; err != nil {
+		return nil, err
+	}
+
+	// 根据列表构建部门树
+	var trees []tree.Tree
+	for _, item := range list {
+		trees = append(trees, item)
+	}
+	return tree.BuildTree(trees), nil
 }
 
 func (t *Team) InitData(ctx *core.Context) error {
