@@ -26,10 +26,13 @@ func CurrentAdminTeamIds(ctx *core.Context) ([]int64, error) {
 		return nil, errors.MetadataError
 	}
 
-	// user := model.User{}
-	// ids, err := user.
+	user := model.User{}
+	ids, err := user.GetAdminTeamIdByUserId(ctx, md.UserID)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	return ids, nil
 }
 
 // UserLogin 用户登录

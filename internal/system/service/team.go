@@ -26,7 +26,7 @@ func AddTeam(ctx *core.Context, in *types.AddTeamRequest) error {
 		return err
 	}
 
-	if tools.InList(ids, in.ParentID) {
+	if !tools.InList(ids, in.ParentID) {
 		return errors.NotAddTeamError
 	}
 

@@ -100,6 +100,9 @@ func (u *User) GetAdminTeamIdByUserId(ctx *core.Context, userId int64) ([]int64,
 	case constants.ALLTEAM:
 		// 全部数据权限时返回所有部门 id
 		ids = tree.GetTreeID(teamTree)
+	case constants.DOWNTEAM:
+		// 下级部门权限时, 排除当前部门 id
+		ids = tree.GetTreeID(teamTree)
 		if len(ids) > 2 {
 			ids = ids[1:]
 		} else {
