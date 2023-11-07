@@ -11,6 +11,7 @@ require (
 	github.com/go-resty/resty/v2 v2.10.0
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.3.0
+	github.com/jinzhu/copier v0.4.0
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/spf13/viper v1.17.0
 	go.uber.org/zap v1.26.0

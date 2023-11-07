@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
@@ -43,6 +44,15 @@ func (t *Team) TableName() string {
 	return "tb_system_team"
 }
 
+// All 获取所有部门
+func (t *Team) All(ctx *core.Context) ([]*Team, error) {
+	list := make([]*Team, 0)
+	if err := database(ctx).Find(&list).Error; err != nil {
+		return nil, transferErr(err)
+	}
+	return list, nil
+}
+
 // Tree 获取部门树
 func (t *Team) Tree(ctx *core.Context) (tree.Tree, error) {
 	// 获取部门列表
@@ -57,6 +67,18 @@ func (t *Team) Tree(ctx *core.Context) (tree.Tree, error) {
 		trees = append(trees, item)
 	}
 	return tree.BuildTree(trees), nil
+}
+
+// Create 添加部门
+func (t *Team) Create(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+	t.Operator = md.Username
+	t.OperatorID = md.UserID
+
+	return transferErr(database(ctx).Create(&t).Error)
 }
 
 func (t *Team) InitData(ctx *core.Context) error {

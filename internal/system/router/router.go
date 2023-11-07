@@ -19,6 +19,7 @@ func Init(engine *gin.RouterGroup) {
 
 		// 部门相关
 		api.GET("/teams", handler.AllTeam)
+		api.POST("/team", handler.AddTeam)
 
 		// 用户管理相关
 		api.GET("/user", handler.CurUser)

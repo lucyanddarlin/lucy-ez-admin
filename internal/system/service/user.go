@@ -19,6 +19,19 @@ const (
 	passwordExpiredTime = 10 * 1000
 )
 
+// CurrentAdminTeamIds 获取当前用户管理的部门 id
+func CurrentAdminTeamIds(ctx *core.Context) ([]int64, error) {
+	md := ctx.Metadata()
+	if md == nil {
+		return nil, errors.MetadataError
+	}
+
+	// user := model.User{}
+	// ids, err := user.
+
+	return nil, nil
+}
+
 // UserLogin 用户登录
 func UserLogin(ctx *core.Context, in *types.UserLoginRequest) (resp *types.UserLoginResponse, err error) {
 	resp = new(types.UserLoginResponse)

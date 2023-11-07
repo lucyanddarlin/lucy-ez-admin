@@ -50,6 +50,11 @@ func (r *Role) ChildrenNode() []tree.Tree {
 	return list
 }
 
+// OneByID 通过 ID 查询角色信息
+func (r *Role) OneByID(ctx *core.Context, id int64) error {
+	return transferErr(database(ctx).First(r, "id = ?", id).Error)
+}
+
 // RoleStatus 获取角色状态
 func (r *Role) RoleStatus(ctx *core.Context, roleID int64) bool {
 	team, err := r.Tree(ctx, 1)

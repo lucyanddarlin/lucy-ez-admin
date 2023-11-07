@@ -1,10 +1,13 @@
 package model
 
 import (
+	"encoding/json"
 	"time"
 
+	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 	"google.golang.org/protobuf/proto"
 )
@@ -57,6 +60,53 @@ func (u *User) PasswordByPhone(ctx *core.Context, phone string) (string, error) 
 // UpdateLastLogin 更新最新登录时间
 func (u *User) UpdateLastLogin(ctx *core.Context, t int64) error {
 	return transferErr(database(ctx).Model(u).Where("id", u.ID).Update("last_login", t).Error)
+}
+
+// GetAdminTeamIdByUserId 通过用户 id 获取用户所管理的部门 id
+func (u *User) GetAdminTeamIdByUserId(ctx *core.Context, userId int64) ([]int64, error) {
+	// 操作者信息
+	user := User{}
+	if err := user.OneByID(ctx, userId); err != nil {
+		return nil, err
+	}
+
+	// 查询角色
+	role := Role{}
+	if err := role.OneByID(ctx, user.RoleID); err != nil {
+		return nil, err
+	}
+
+	// 当用户权限是当前部门时, 直接返回当前部门的 id
+	if role.DataScope == constants.CURTEAM {
+		return []int64{user.TeamID}, nil
+	}
+
+	ids := make([]int64, 0)
+	if role.DataScope == constants.CUSTOM {
+		return ids, json.Unmarshal([]byte(*role.TeamIds), &ids)
+	}
+
+	// 以当前部门为根节点构造部门树
+	team := Team{}
+	teamList, _ := team.All(ctx)
+	var treeList []tree.Tree
+	for _, item := range teamList {
+		treeList = append(treeList, item)
+	}
+	teamTree := tree.BuildTreeByID(treeList, user.TeamID)
+
+	// 根据部门取值
+	switch role.DataScope {
+	case constants.ALLTEAM:
+		// 全部数据权限时返回所有部门 id
+		ids = tree.GetTreeID(teamTree)
+		if len(ids) > 2 {
+			ids = ids[1:]
+		} else {
+			ids = []int64{}
+		}
+	}
+	return ids, nil
 }
 
 func (u *User) InitData(ctx *core.Context) error {

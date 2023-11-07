@@ -10,3 +10,13 @@ func HashPwd(password string) string {
 func CompareHashPwd(p1, p2 string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(p1), []byte(p2)) == nil
 }
+
+// InList 判断目标值是否在列表中
+func InList[ListType comparable](list []ListType, val ListType) bool {
+	for _, v := range list {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
