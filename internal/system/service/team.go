@@ -19,6 +19,13 @@ func AllTeam(ctx *core.Context) (tree.Tree, error) {
 // AddTeam 添加部门
 func AddTeam(ctx *core.Context, in *types.AddTeamRequest) error {
 	team := model.Team{}
+	team.OneByTeamName(ctx, in.Name)
+
+	if team.Name != "" {
+		return errors.ExistTeamError
+	}
+
+	team = model.Team{}
 
 	// 获取用户管理的部门
 	ids, err := CurrentAdminTeamIds(ctx)

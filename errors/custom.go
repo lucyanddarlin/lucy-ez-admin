@@ -51,6 +51,7 @@ var (
 	NotEditTeamUserError = &types.Response{Code: 1000044, Msg: "暂无此部门的人员修改权限"}
 	NotDelTeamUserError  = &types.Response{Code: 1000045, Msg: "暂无此部门的人员删除权限"}
 	TeamParentIdError    = &types.Response{Code: 1000046, Msg: "父部门不能为自己"}
+	ExistTeamError       = &types.Response{Code: 1000047, Msg: "部门已存在"}
 
 	//role相关
 	DulKeywordError     = &types.Response{Code: 1000050, Msg: "角色标志符已存在"}

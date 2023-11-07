@@ -69,6 +69,16 @@ func (t *Team) Tree(ctx *core.Context) (tree.Tree, error) {
 	return tree.BuildTree(trees), nil
 }
 
+// OneByTeamName 根据部门名称查询部门
+func (t *Team) OneByTeamName(ctx *core.Context, name string) error {
+	return transferErr(database(ctx).First(t, "name = ?", name).Error)
+}
+
+// IsExistTeamByName
+func (t *Team) IsExistTeamByName(ctx *core.Context, name string) {
+	t.OneByTeamName(ctx, name)
+}
+
 // Create 添加部门
 func (t *Team) Create(ctx *core.Context) error {
 	md := ctx.Metadata()
