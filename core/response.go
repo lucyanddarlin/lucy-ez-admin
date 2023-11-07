@@ -43,8 +43,8 @@ func (ctx *Context) RespList(total int64, data any) {
 
 // RespError
 //
-//		@Description: 返回数据错误的信息
-//	 @param err
+//	@Description: 返回数据错误的信息
+//	@param err
 func (ctx *Context) RespError(err error) {
 	if response, is := err.(*types.Response); is {
 		response.TranceID = ctx.TranceID()

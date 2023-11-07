@@ -17,6 +17,9 @@ func Init(engine *gin.RouterGroup) {
 		// 发送邮箱验证码
 		api.POST("/email/captcha", handler.EmailCaptcha)
 
+		// 用户操作
+		api.GET("/user", handler.CurUser)
+
 		// 用户其他操作
 		api.POST("/user/login", handler.UserLogin)
 		api.POST("/user/logout", handler.UserLogout)

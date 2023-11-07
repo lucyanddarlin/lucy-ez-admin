@@ -140,3 +140,14 @@ func RefreshToken(ctx *core.Context) (*types.UserLoginResponse, error) {
 		Token: token,
 	}, e
 }
+
+// CurrentUser 获取当前登录用户信息
+func CurrentUser(ctx *core.Context) (*model.User, error) {
+	md := ctx.Metadata()
+	if md == nil {
+		return nil, errors.MetadataError
+	}
+
+	user := model.User{}
+	return &user, user.OneByID(ctx, md.UserID)
+}

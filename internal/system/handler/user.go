@@ -52,3 +52,15 @@ func RefreshToken(c *gin.Context) {
 		ctx.RespData(resp)
 	}
 }
+
+// CurUser 获取当前用户信息
+func CurUser(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	if user, err := service.CurrentUser(ctx); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespData(user)
+	}
+}
