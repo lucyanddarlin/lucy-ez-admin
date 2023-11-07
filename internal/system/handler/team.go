@@ -37,3 +37,21 @@ func AddTeam(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// UpdateTeam 更新部门信息
+func UpdateTeam(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.UpdateTeamRequest{}
+	if ctx.ShouldBind(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.UpdateTeam(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}

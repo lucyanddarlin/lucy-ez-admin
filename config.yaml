@@ -114,7 +114,7 @@ jwt:
   header: Authorization #jwt验证header
   secret: limeSchool #密钥
   cache: cache #redis名称
-  expire: 3000s #过期时间
+  expire: 30000s #过期时间
   renewal: 2h #续期时间
   unique: true #是否唯一设备登陆
   whitelist: #忽略token校验以及鉴权的白名单

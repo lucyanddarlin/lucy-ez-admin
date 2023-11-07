@@ -91,6 +91,19 @@ func (t *Team) Create(ctx *core.Context) error {
 	return transferErr(database(ctx).Create(&t).Error)
 }
 
+// Update 更新部门
+func (t *Team) Update(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	t.Operator = md.Username
+	t.OperatorID = md.UserID
+
+	return transferErr(database(ctx).Updates(t).Error)
+}
+
 func (t *Team) InitData(ctx *core.Context) error {
 	db := database(ctx)
 	ins := Team{

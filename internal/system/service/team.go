@@ -43,3 +43,31 @@ func AddTeam(ctx *core.Context, in *types.AddTeamRequest) error {
 
 	return team.Create(ctx)
 }
+
+// UpdateTeam  更新部门信息
+func UpdateTeam(ctx *core.Context, in *types.UpdateTeamRequest) error {
+	team := model.Team{}
+	team.OneByTeamName(ctx, in.Name)
+
+	if team.Name != "" {
+		return errors.ExistTeamError
+	}
+
+	team = model.Team{}
+
+	// 获取用户管理的部门
+	ids, err := CurrentAdminTeamIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !tools.InList(ids, in.ID) {
+		return errors.NotEditTeamError
+	}
+
+	if copier.Copy(&team, in) != nil {
+		return errors.AssignError
+	}
+
+	return team.Update(ctx)
+}
