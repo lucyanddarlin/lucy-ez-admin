@@ -71,3 +71,20 @@ func UpdateTeam(ctx *core.Context, in *types.UpdateTeamRequest) error {
 
 	return team.Update(ctx)
 }
+
+// DeleteTeam 删除部门
+func DeleteTeam(ctx *core.Context, in *types.DeleteTeamRequest) error {
+	team := model.Team{}
+
+	// 获取用户管理的部门
+	ids, err := CurrentAdminTeamIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	if !tools.InList(ids, in.ID) {
+		return errors.NotDelTeamError
+	}
+
+	return team.DeleteByID(ctx, in.ID)
+}

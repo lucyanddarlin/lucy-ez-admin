@@ -55,3 +55,20 @@ func UpdateTeam(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// DeleteTeam 删除部门
+func DeleteTeam(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.DeleteTeamRequest{}
+	if ctx.ShouldBind(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+	if err := service.DeleteTeam(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}

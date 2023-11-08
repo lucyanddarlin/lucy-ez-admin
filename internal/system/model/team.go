@@ -104,6 +104,16 @@ func (t *Team) Update(ctx *core.Context) error {
 	return transferErr(database(ctx).Updates(t).Error)
 }
 
+// DeleteByID 删除部门
+func (t *Team) DeleteByID(ctx *core.Context, id int64) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	return transferErr(database(ctx).Delete(&t, id).Error)
+}
+
 func (t *Team) InitData(ctx *core.Context) error {
 	db := database(ctx)
 	ins := Team{

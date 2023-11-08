@@ -12,3 +12,7 @@ type UpdateTeamRequest struct {
 	Description string `json:"description" form:"description"`
 	ParentID    int64  `json:"parent_id" form:"parent_id"`
 }
+
+type DeleteTeamRequest struct {
+	ID int64 `json:"id" form:"id" binding:"required"`
+}

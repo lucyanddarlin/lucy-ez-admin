@@ -21,6 +21,7 @@ func Init(engine *gin.RouterGroup) {
 		api.GET("/teams", handler.AllTeam)
 		api.POST("/team", handler.AddTeam)
 		api.PUT("/team", handler.UpdateTeam)
+		api.DELETE("/team", handler.DeleteTeam)
 
 		// 用户管理相关
 		api.GET("/user", handler.CurUser)
