@@ -104,14 +104,22 @@ func (t *Team) Update(ctx *core.Context) error {
 	return transferErr(database(ctx).Updates(t).Error)
 }
 
-// DeleteByID 删除部门
+// DeleteByID 通过 ID 删除指定部门, 以及该部门下的所有部门
 func (t *Team) DeleteByID(ctx *core.Context, id int64) error {
-	md := ctx.Metadata()
-	if md == nil {
-		return errors.MetadataError
+	list, err := t.All(ctx)
+	if err != nil {
+		return err
 	}
 
-	return transferErr(database(ctx).Delete(&t, id).Error)
+	var treeList []tree.Tree
+	for _, item := range list {
+		treeList = append(treeList, item)
+	}
+	team := tree.BuildTreeByID(treeList, id)
+	ids := tree.GetTreeID(team)
+
+	// 进行数据删除
+	return transferErr(database(ctx).Where("id in ?", ids).Delete(&t).Error)
 }
 
 func (t *Team) InitData(ctx *core.Context) error {
