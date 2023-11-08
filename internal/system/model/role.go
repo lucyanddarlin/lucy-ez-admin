@@ -5,6 +5,7 @@ import (
 
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 	"google.golang.org/protobuf/proto"
@@ -90,10 +91,42 @@ func (r *Role) Tree(ctx *core.Context, roleID int64) (tree.Tree, error) {
 	return tree.BuildTreeByID(treeList, roleID), nil
 }
 
+// All 获取所有的角色
 func (r *Role) All(ctx *core.Context, cond ...any) ([]*Role, error) {
 	var list []*Role
 	return list, transferErr(database(ctx).Order("weight desc").Find(&list, cond...).Error)
+}
 
+// Create 创建角色
+func (r *Role) Create(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	r.Operator = md.Username
+	r.OperatorID = md.UserID
+
+	return transferErr(database(ctx).Create(&r).Error)
+}
+
+// Update 更新角色
+func (r *Role) Update(ctx *core.Context) error {
+
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	r.Operator = md.Username
+	r.OperatorID = md.UserID
+
+	return transferErr(database(ctx).Updates(&r).Error)
+}
+
+// DeleteByID 根据 roleID 删除角色
+func (r *Role) DeleteByID(ctx *core.Context, id int64) error {
+	return transferErr(database(ctx).Where("id = ?", id).Delete(&r).Error)
 }
 
 func (r *Role) InitData(ctx *core.Context) error {

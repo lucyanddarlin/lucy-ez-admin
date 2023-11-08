@@ -17,6 +17,12 @@ func Init(engine *gin.RouterGroup) {
 		// 发送邮箱验证码
 		api.POST("/email/captcha", handler.EmailCaptcha)
 
+		// 角色相关
+		api.GET("/roles", handler.AllRole)
+		api.POST("/role", handler.AddRole)
+		api.PUT("/role", handler.UpdateRole)
+		api.DELETE("/role", handler.DeleteRole)
+
 		// 部门相关
 		api.GET("/teams", handler.AllTeam)
 		api.POST("/team", handler.AddTeam)
