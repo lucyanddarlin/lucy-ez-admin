@@ -7,6 +7,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/email"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/enforcer"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/redis"
@@ -37,6 +38,8 @@ func initInstance(conf *config.Config) {
 	ormIns := orm.New(conf.Orm, loggerIns)
 	// redis
 	redisIns := redis.New(conf.Redis)
+	// 权限校验器
+	enforcerIns := enforcer.New(conf.Enforcer, ormIns)
 	// 邮箱
 	emailIns := email.New(conf.Email)
 	// 验证码
@@ -52,5 +55,6 @@ func initInstance(conf *config.Config) {
 		WithEmail(emailIns),
 		WithCaptcha(captchaIns),
 		WithCert(certIns),
+		WithEnforcer(enforcerIns),
 	)
 }

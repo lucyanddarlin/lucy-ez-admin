@@ -5,6 +5,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/email"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/enforcer"
 	logger "github.com/lucyanddarlin/lucy-ez-admin/core/log"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/redis"
@@ -15,13 +16,14 @@ var (
 )
 
 type global struct {
-	config  *config.Config
-	logger  logger.Logger
-	orm     orm.Orm
-	redis   redis.Redis
-	email   email.Email
-	captcha captcha.Captcha
-	cert    cert.Cert
+	config   *config.Config
+	logger   logger.Logger
+	orm      orm.Orm
+	redis    redis.Redis
+	email    email.Email
+	captcha  captcha.Captcha
+	cert     cert.Cert
+	enforcer enforcer.Enforcer
 }
 
 func initGlobal(config *config.Config, opts ...option) {

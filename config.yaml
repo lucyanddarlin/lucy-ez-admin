@@ -123,3 +123,8 @@ jwt:
     post:/api/system/user/login: true
     get:/api/system/config: true
     post:/api/system/user/logout: true
+# cas_bin 权限管理
+enforcer:
+  enable: true #是否开启enforcer权限校验
+  db: system #选择enforcer的数据库
+  cache: cache #选择缓存的redis名
