@@ -30,6 +30,9 @@ func Registry(engine *gin.Engine) *gin.RouterGroup {
 	// 开启 jwt 鉴权
 	api.Use(JwtAuth())
 
+	// 开启 rbac 鉴权
+	api.Use(Enforcer())
+
 	return api
 
 }

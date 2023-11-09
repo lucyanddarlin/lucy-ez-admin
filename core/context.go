@@ -9,6 +9,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/captcha"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/cert"
+	"github.com/lucyanddarlin/lucy-ez-admin/core/enforcer"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/http"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/jwt"
 	"github.com/lucyanddarlin/lucy-ez-admin/core/orm"
@@ -77,6 +78,11 @@ func (ctx *Context) Orm() orm.Orm {
 // Redis 获取 Redis
 func (ctx *Context) Redis() redis.Redis {
 	return g.redis
+}
+
+// Enforcer 获取 enforcer 权限验证
+func (ctx *Context) Enforcer() enforcer.Enforcer {
+	return g.enforcer
 }
 
 // Http 获取请求器
