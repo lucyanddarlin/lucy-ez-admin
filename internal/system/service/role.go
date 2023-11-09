@@ -72,7 +72,12 @@ func DeleteRole(ctx *core.Context, in *types.DeleteRoleRequest) error {
 		return errors.SuperAdminDelError
 	}
 
+	// 删除角色时需要删除 rbac 权限表
 	role := model.Role{}
+	if err := role.OneByID(ctx, in.ID); err != nil {
+		return err
+	}
+	_, _ = ctx.Enforcer().Instance().RemoveFilteredPolicy(0, md.RoleKey)
 
 	return role.DeleteByID(ctx, in.ID)
 }
