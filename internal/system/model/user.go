@@ -49,6 +49,12 @@ func (u *User) OneByPhone(ctx *core.Context, phone string) error {
 	return transferErr(db.First(u, "phone=?", phone).Error)
 }
 
+// OneByName 通过 name 查询用户信息
+func (u *User) OneByName(ctx *core.Context, name string) error {
+	db := database(ctx)
+	return transferErr(db.First(u, "name=?", name).Error)
+}
+
 // PasswordByPhone 查询全部字段信息包括密码
 func (u *User) PasswordByPhone(ctx *core.Context, phone string) (string, error) {
 	m := map[string]any{}
@@ -78,6 +84,23 @@ func (u *User) Update(ctx *core.Context) error {
 
 	// 执行更新
 	return transferErr(database(ctx).Updates(&u).Error)
+}
+
+// Create 创建用户
+func (u *User) Create(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	u.Operator = md.Username
+	u.OperatorID = md.UserID
+
+	u.UpdatedAt = time.Now().Unix()
+	u.Password = tools.HashPwd(u.Password)
+	u.DisableDesc = proto.String("")
+
+	return transferErr(database(ctx).Create(u).Error)
 }
 
 // GetAdminTeamIdByUserId 通过用户 id 获取用户所管理的部门 id

@@ -82,3 +82,21 @@ func UpdateUser(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// AddUser 添加用户
+func AddUser(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.AddUserRequest{}
+	if ctx.ShouldBindJSON(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.AddUser(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}

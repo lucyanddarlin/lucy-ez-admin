@@ -29,3 +29,16 @@ type UpdateUserRequest struct {
 	Status   *bool  `json:"status"`
 	Password string `json:"password"`
 }
+
+type AddUserRequest struct {
+	TeamID   int64  `json:"team_id" binding:"required"`
+	RoleID   int64  `json:"role_id" binding:"required"`
+	Name     string `json:"name" binding:"required"`
+	Sex      *bool  `json:"sex" binding:"required"`
+	Phone    string `json:"phone" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Nickname string `json:"nick_name"`
+	Avatar   string `json:"avatar"`
+	Email    string `json:"email" binding:"required"`
+	Status   *bool  `json:"status" binding:"required"`
+}

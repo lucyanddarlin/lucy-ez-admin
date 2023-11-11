@@ -230,6 +230,37 @@ func UpdateUser(ctx *core.Context, in *types.UpdateUserRequest) error {
 	if copier.Copy(&user, in) != nil {
 		return errors.AssignError
 	}
+	return user.Update(ctx)
+}
 
-	return nil
+// AddUser 添加用户
+func AddUser(ctx *core.Context, in *types.AddUserRequest) error {
+	user := model.User{}
+	user.OneByName(ctx, in.Name)
+	if user.Name != "" {
+		return errors.ExistUserNameError
+	}
+
+	user = model.User{}
+
+	if in.Nickname == "" {
+		in.Nickname = in.Name
+	}
+
+	if err := copier.Copy(&user, in); err != nil {
+		return err
+	}
+
+	// 获取操作者所管理的部门
+	ids, err := CurrentAdminTeamIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	// 添加用户时, 只允许添加到当前操作者所管理的部门
+	if !tools.InList(ids, in.TeamID) {
+		return errors.NotAddTeamUserError
+	}
+
+	return user.Create(ctx)
 }

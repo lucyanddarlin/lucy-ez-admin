@@ -18,7 +18,7 @@ func JwtAuth() gin.HandlerFunc {
 		// 解析 token
 		md, err := ctx.Jwt().Parse()
 		if md == nil {
-			ctx.RespError(errors.MetadataError)
+			ctx.RespError(errors.TokenEmptyError)
 			ctx.Abort()
 			return
 		}

@@ -32,6 +32,7 @@ func Init(engine *gin.RouterGroup) {
 		// 用户管理相关
 		api.GET("/user", handler.CurUser)
 		api.PUT("/user", handler.UpdateUser)
+		api.POST("/user", handler.AddUser)
 
 		// 用户其他操作
 		api.POST("/user/login", handler.UserLogin)
