@@ -86,6 +86,30 @@ func (u *User) Update(ctx *core.Context) error {
 	return transferErr(database(ctx).Updates(&u).Error)
 }
 
+// Page 查询分页数据
+func (u *User) Page(ctx *core.Context, options types.PageOptions) ([]*User, int64, error) {
+	list, total := make([]*User, 0), int64(0)
+	db := database(ctx).Model(u)
+
+	if options.Model != nil {
+		db = ctx.Orm().GormWhere(db, u.TableName(), options.Model)
+	}
+
+	if options.Scopes != nil {
+		db = db.Scopes(options.Scopes)
+	}
+
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	db = db.Preload("Role").Preload("Team")
+
+	db.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
+
+	return list, total, db.Find(&list).Error
+}
+
 // Create 创建用户
 func (u *User) Create(ctx *core.Context) error {
 	md := ctx.Metadata()

@@ -30,6 +30,7 @@ func Init(engine *gin.RouterGroup) {
 		api.DELETE("/team", handler.DeleteTeam)
 
 		// 用户管理相关
+		api.GET("users", handler.PageUser)
 		api.GET("/user", handler.CurUser)
 		api.PUT("/user", handler.UpdateUser)
 		api.POST("/user", handler.AddUser)

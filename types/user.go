@@ -52,3 +52,17 @@ type AddUserRequest struct {
 type DeleteUserRequest struct {
 	ID int64 `json:"id"`
 }
+
+type PageUserRequest struct {
+	Page     int    `json:"page" form:"page" binding:"required" sql:"-"`
+	PageSize int    `json:"page_size" form:"page_size" binding:"required,max=50" sql:"-"`
+	TeamID   int64  `json:"team_id" form:"team_id"`
+	RoleID   int64  `json:"role_id" form:"role_id"`
+	Name     string `json:"name" form:"name" sql:"like '%?%'"`
+	Phone    string `json:"phone" form:"phone"`
+	Email    string `json:"email" form:"email"`
+	Sex      *bool  `json:"sex" form:"sex"`
+	Status   *bool  `json:"status" form:"status"`
+	Start    int64  `json:"start" form:"start" sql:"> ?" column:"created_at"`
+	End      int64  `json:"end" form:"end" sql:"< ?" column:"created_at"`
+}

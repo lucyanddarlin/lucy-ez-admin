@@ -136,3 +136,21 @@ func DeleteUser(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// PageUser 用户列表分页
+func PageUser(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.PageUserRequest{}
+	if ctx.ShouldBind(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if list, total, err := service.PageUser(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespList(total, list)
+	}
+}

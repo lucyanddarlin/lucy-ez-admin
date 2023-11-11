@@ -13,6 +13,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/tools"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
+	"gorm.io/gorm"
 )
 
 const (
@@ -303,4 +304,25 @@ func DeleteUser(ctx *core.Context, in *types.DeleteUserRequest) error {
 		return errors.NotDelTeamUserError
 	}
 	return user.DeleteByID(ctx, in.ID)
+}
+
+// PageUser 获取用户列表分页
+func PageUser(ctx *core.Context, in *types.PageUserRequest) ([]*model.User, int64, error) {
+	user := model.User{}
+
+	// 获取当前操作者所管理的部门
+	ids, err := CurrentAdminTeamIds(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return user.Page(ctx, types.PageOptions{
+		Page:     in.Page,
+		PageSize: in.PageSize,
+		Model:    in,
+		Scopes: func(db *gorm.DB) *gorm.DB {
+			return db.Where("team_id in ?", ids)
+		},
+	})
+
 }
