@@ -30,6 +30,12 @@ type UpdateUserRequest struct {
 	Password string `json:"password"`
 }
 
+type UpdateUserInfoRequest struct {
+	Nickname string `json:"nickname"`
+	Avatar   string `json:"avatar"`
+	Sex      *bool  `json:"sex"`
+}
+
 type AddUserRequest struct {
 	TeamID   int64  `json:"team_id" binding:"required"`
 	RoleID   int64  `json:"role_id" binding:"required"`
@@ -37,7 +43,7 @@ type AddUserRequest struct {
 	Sex      *bool  `json:"sex" binding:"required"`
 	Phone    string `json:"phone" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	Nickname string `json:"nick_name"`
+	Nickname string `json:"nickname"`
 	Avatar   string `json:"avatar"`
 	Email    string `json:"email" binding:"required"`
 	Status   *bool  `json:"status" binding:"required"`

@@ -33,6 +33,7 @@ func Init(engine *gin.RouterGroup) {
 		api.GET("/user", handler.CurUser)
 		api.PUT("/user", handler.UpdateUser)
 		api.POST("/user", handler.AddUser)
+		api.POST("user/info", handler.UpdateUserInfo)
 
 		// 用户其他操作
 		api.POST("/user/login", handler.UserLogin)

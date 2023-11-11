@@ -100,3 +100,20 @@ func AddUser(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// UpdateUserInfo 更新当前用户信息
+func UpdateUserInfo(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.UpdateUserInfoRequest{}
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		ctx.RespError(err)
+	}
+
+	if err := service.UpdateCurrentUserInfo(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}

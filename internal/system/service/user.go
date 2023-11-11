@@ -264,3 +264,19 @@ func AddUser(ctx *core.Context, in *types.AddUserRequest) error {
 
 	return user.Create(ctx)
 }
+
+// UpdateCurrentUserInfo 更新用户信息
+func UpdateCurrentUserInfo(ctx *core.Context, in *types.UpdateUserInfoRequest) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	user := model.User{}
+	if err := copier.Copy(&user, in); err != nil {
+		return err
+	}
+	user.ID = md.UserID
+
+	return user.Update(ctx)
+}
