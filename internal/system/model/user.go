@@ -103,6 +103,11 @@ func (u *User) Create(ctx *core.Context) error {
 	return transferErr(database(ctx).Create(u).Error)
 }
 
+// DeleteByID 通过 id 删除用户信息
+func (u *User) DeleteByID(ctx *core.Context, id int64) error {
+	return transferErr(database(ctx).Delete(u, id).Error)
+}
+
 // GetAdminTeamIdByUserId 通过用户 id 获取用户所管理的部门 id
 func (u *User) GetAdminTeamIdByUserId(ctx *core.Context, userId int64) ([]int64, error) {
 	// 操作者信息

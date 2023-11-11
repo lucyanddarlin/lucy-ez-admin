@@ -109,9 +109,28 @@ func UpdateUserInfo(c *gin.Context) {
 	in := types.UpdateUserInfoRequest{}
 	if err := ctx.ShouldBindJSON(&in); err != nil {
 		ctx.RespError(err)
+		return
 	}
 
 	if err := service.UpdateCurrentUserInfo(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}
+
+// DeleteUser 删除用户
+func DeleteUser(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.DeleteUserRequest{}
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.DeleteUser(ctx, &in); err != nil {
 		ctx.RespError(err)
 	} else {
 		ctx.RespSuccess()

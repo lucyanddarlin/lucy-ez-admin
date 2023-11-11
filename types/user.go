@@ -48,3 +48,7 @@ type AddUserRequest struct {
 	Email    string `json:"email" binding:"required"`
 	Status   *bool  `json:"status" binding:"required"`
 }
+
+type DeleteUserRequest struct {
+	ID int64 `json:"id"`
+}

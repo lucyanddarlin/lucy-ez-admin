@@ -280,3 +280,27 @@ func UpdateCurrentUserInfo(ctx *core.Context, in *types.UpdateUserInfoRequest) e
 
 	return user.Update(ctx)
 }
+
+// DeleteUser 删除用户
+func DeleteUser(ctx *core.Context, in *types.DeleteUserRequest) error {
+	if in.ID == 1 {
+		return errors.SuperAdminDelError
+	}
+
+	user := model.User{}
+	if user.OneByID(ctx, in.ID) != nil {
+		return errors.DBNotFoundError
+	}
+
+	// 获取操作者所管理的部门
+	ids, err := CurrentAdminTeamIds(ctx)
+	if err != nil {
+		return err
+	}
+
+	// 只允许删除当前操作者所管理部门的人员
+	if !tools.InList(ids, user.TeamID) {
+		return errors.NotDelTeamUserError
+	}
+	return user.DeleteByID(ctx, in.ID)
+}
