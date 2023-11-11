@@ -6,10 +6,12 @@ import (
 	"time"
 
 	"github.com/forgoer/openssl"
+	"github.com/jinzhu/copier"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
 
@@ -33,6 +35,21 @@ func CurrentAdminTeamIds(ctx *core.Context) ([]int64, error) {
 	}
 
 	return ids, nil
+}
+
+// CurrentAdminRoleIds 获取当前用户管理的角色 ids
+func CurrentAdminRoleIds(ctx *core.Context) ([]int64, error) {
+	md := ctx.Metadata()
+	if md == nil {
+		return nil, errors.MetadataError
+	}
+
+	role := model.Role{}
+	roleTree, err := role.Tree(ctx, md.RoleID)
+	if err != nil {
+		return nil, err
+	}
+	return tree.GetTreeID(roleTree), nil
 }
 
 // UserLogin 用户登录
@@ -186,9 +203,33 @@ func UpdateUser(ctx *core.Context, in *types.UpdateUserRequest) error {
 
 	// 修改角色时, 也只允许修改到自己所在管辖的角色
 	if in.RoleID != 0 && in.RoleID != user.RoleID {
-		return errors.New("tdb")
+		ids, err := CurrentAdminTeamIds(ctx)
+		if err != nil {
+			return err
+		}
+		if !tools.InList(ids, in.RoleID) {
+			return errors.NotEditUserRoleError
+		}
+	}
+
+	// 获取用户可以管理的部门
+	ids, err := CurrentAdminTeamIds(ctx)
+	if err != nil {
+		return nil
+	}
+	// 只允许更新当前部门的用户信息
+	if !tools.InList(ids, user.TeamID) {
+		return errors.NotEditTeamError
+	}
+
+	// 修改部门时, 只允许修改到自己所管辖的部门
+	if in.TeamID != 0 && in.TeamID != user.TeamID && !tools.InList(ids, in.TeamID) {
+		return errors.NotEditTeamError
+	}
+
+	if copier.Copy(&user, in) != nil {
+		return errors.AssignError
 	}
 
 	return nil
-
 }

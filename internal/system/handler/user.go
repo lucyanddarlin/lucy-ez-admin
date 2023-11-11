@@ -76,4 +76,9 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
+	if err := service.UpdateUser(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
 }

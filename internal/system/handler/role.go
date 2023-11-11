@@ -89,8 +89,6 @@ func DeleteRole(c *gin.Context) {
 		return
 	}
 
-	// TODO: 删除 rbac 权限
-
 	if err := service.DeleteRole(ctx, &in); err != nil {
 		ctx.RespError(err)
 	} else {

@@ -6,6 +6,7 @@ import (
 
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
@@ -60,6 +61,23 @@ func (u *User) PasswordByPhone(ctx *core.Context, phone string) (string, error) 
 // UpdateLastLogin 更新最新登录时间
 func (u *User) UpdateLastLogin(ctx *core.Context, t int64) error {
 	return transferErr(database(ctx).Model(u).Where("id", u.ID).Update("last_login", t).Error)
+}
+
+// Update 更新用户信息
+func (u *User) Update(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+	u.Operator = md.Username
+	u.OperatorID = md.UserID
+
+	if u.Password != "" {
+		u.Password = tools.HashPwd(u.Password)
+	}
+
+	// 执行更新
+	return transferErr(database(ctx).Updates(&u).Error)
 }
 
 // GetAdminTeamIdByUserId 通过用户 id 获取用户所管理的部门 id
