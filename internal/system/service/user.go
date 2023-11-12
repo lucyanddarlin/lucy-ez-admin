@@ -241,6 +241,9 @@ func AddUser(ctx *core.Context, in *types.AddUserRequest) error {
 	if user.Name != "" {
 		return errors.ExistUserNameError
 	}
+	if user.Phone != "" {
+		return errors.ExistUserPhoneError
+	}
 
 	user = model.User{}
 

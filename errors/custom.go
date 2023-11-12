@@ -38,7 +38,8 @@ var (
 	TokenEmptyError       = &types.Response{Code: 4000, Msg: "token信息不存在"}
 
 	// user相关
-	ExistUserNameError = &types.Response{Code: 1000020, Msg: "用户名已存在"}
+	ExistUserNameError  = &types.Response{Code: 1000020, Msg: "用户名已存在"}
+	ExistUserPhoneError = &types.Response{Code: 1000020, Msg: "手机号已存在"}
 
 	//menu相关
 	DulMenuNameError    = &types.Response{Code: 1000030, Msg: "菜单name值不能重复"}
