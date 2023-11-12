@@ -327,5 +327,30 @@ func PageUser(ctx *core.Context, in *types.PageUserRequest) ([]*model.User, int6
 			return db.Where("team_id in ?", ids)
 		},
 	})
+}
 
+// UpdateUserInfoByVerify 更新当前用户重要信息
+func UpdateUserInfoByVerify(ctx *core.Context, in *types.UpdateUserInfoByVerifyRequest) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	// 判断验证码是否正确
+	if err := ctx.EmailCaptcha("user").Verify(in.CaptchaID, in.Captcha); err != nil {
+		return err
+	}
+
+	user := model.User{}
+	user.ID = md.UserID
+	if in.Password != "" {
+		user.Password = tools.HashPwd(in.Password)
+	}
+	if in.Phone != "" {
+		user.Phone = in.Phone
+	}
+	if in.Email != "" {
+		user.Email = in.Email
+	}
+	return user.Update(ctx)
 }

@@ -119,6 +119,26 @@ func UpdateUserInfo(c *gin.Context) {
 	}
 }
 
+// UpdateUserInfoByVerify 更新用户重要信息
+func UpdateUserInfoByVerify(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.UpdateUserInfoByVerifyRequest{
+		CaptchaName: "user",
+	}
+	if ctx.ShouldBindJSON(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.UpdateUserInfoByVerify(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}
+
 // DeleteUser 删除用户
 func DeleteUser(c *gin.Context) {
 	ctx := core.New(c)

@@ -66,3 +66,12 @@ type PageUserRequest struct {
 	Start    int64  `json:"start" form:"start" sql:"> ?" column:"created_at"`
 	End      int64  `json:"end" form:"end" sql:"< ?" column:"created_at"`
 }
+
+type UpdateUserInfoByVerifyRequest struct {
+	Phone       string `json:"phone" binding:"required"`
+	Email       string `json:"email" binding:"required"`
+	Password    string `json:"password"`
+	CaptchaName string `json:"-"`
+	CaptchaID   string `json:"captcha_id"`
+	Captcha     string `json:"captcha"`
+}

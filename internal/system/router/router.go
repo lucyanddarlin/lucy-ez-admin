@@ -35,6 +35,7 @@ func Init(engine *gin.RouterGroup) {
 		api.PUT("/user", handler.UpdateUser)
 		api.POST("/user", handler.AddUser)
 		api.POST("user/info", handler.UpdateUserInfo)
+		api.POST("/user/verify", handler.UpdateUserInfoByVerify)
 		api.DELETE("user", handler.DeleteUser)
 
 		// 用户其他操作
