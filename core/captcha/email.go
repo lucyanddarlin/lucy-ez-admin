@@ -78,5 +78,39 @@ func (e *email) New(email string) (*res, error) {
 }
 
 func (e *email) Verify(id, answer string) error {
-	return nil
+	// 获取指定模板的配置
+	cp, is := e.captcha.getTemplate(e.name, e.tp)
+	if !is {
+		return errors.New(fmt.Sprintf("%s captcha is not exist", e.tp))
+	}
+
+	// 获取验证码存储器
+	cache := e.captcha.cache.GetRedis(cp.Cache)
+
+	// 获取当前用户的场景唯一 id
+	cid := e.captcha.cid(e.ip, e.name, e.tp)
+
+	// 验证用户是否生成过验证码 id
+	sid, err := cache.Get(context.Background(), cid).Result()
+	if err != nil {
+		return err
+	}
+
+	// 对比用户当前的验证码场景是否一致
+	if sid != id {
+		return errors.New(fmt.Sprintf("captcha id %s is not exist", id))
+	}
+
+	// 获取指定验证码 id 的答案
+	ans, err := cache.Get(context.Background(), id).Result()
+	if err != nil {
+		return err
+	}
+
+	if ans != answer {
+		return errors.New("verify fail")
+	}
+
+	// 验证通过则清除缓存
+	return cache.Del(context.Background(), id).Err()
 }
