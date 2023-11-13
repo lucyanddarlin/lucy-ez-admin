@@ -8,6 +8,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/proto"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 	"gorm.io/gorm"
 )
@@ -45,6 +46,23 @@ func (m *Menu) ID() int64 {
 	return m.BaseModel.ID
 }
 
+func (m *Menu) Parent() int64 {
+	return m.ParentID
+}
+
+func (m *Menu) AppendChildren(child any) {
+	menu := child.(*Menu)
+	m.Children = append(m.Children, menu)
+}
+
+func (m *Menu) ChildrenNode() []tree.Tree {
+	var list []tree.Tree
+	for _, item := range m.Children {
+		list = append(list, item)
+	}
+	return list
+}
+
 // Create 创建菜单
 func (m *Menu) Create(ctx *core.Context) error {
 	md := ctx.Metadata()
@@ -66,6 +84,27 @@ func (m *Menu) Create(ctx *core.Context) error {
 // OneByName 通过 name 条件查询指定菜单
 func (m *Menu) OneByName(ctx *core.Context, name string) error {
 	return transferErr(database(ctx).First(m, "name = ?", name).Error)
+}
+
+// All 获取所有所有菜单
+func (m *Menu) All(ctx *core.Context, cond ...interface{}) ([]*Menu, error) {
+	var list []*Menu
+	return list, transferErr(database(ctx).Find(&list, cond...).Error)
+}
+
+// Tree 获取菜单树
+func (m *Menu) Tree(ctx *core.Context, cond ...interface{}) (tree.Tree, error) {
+	list, err := m.All(ctx, cond...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var treeList []tree.Tree
+	for _, item := range list {
+		treeList = append(treeList, item)
+	}
+	return tree.BuildTree(treeList), nil
 }
 
 // Update 更新菜单

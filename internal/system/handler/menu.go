@@ -8,6 +8,18 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
 
+// AllMenu 获取所有菜单
+func AllMenu(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	if resp, err := service.AllMenu(ctx); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespData(resp)
+	}
+}
+
 // AddMenu 添加菜单
 func AddMenu(c *gin.Context) {
 	ctx := core.New(c)

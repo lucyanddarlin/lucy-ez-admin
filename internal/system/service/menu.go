@@ -5,8 +5,15 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
 )
+
+// AllMenu 获取菜单树
+func AllMenu(ctx *core.Context) (tree.Tree, error) {
+	menu := model.Menu{}
+	return menu.Tree(ctx)
+}
 
 // AddMenu 添加菜单
 func AddMenu(ctx *core.Context, in *types.AddMenuRequest) error {
