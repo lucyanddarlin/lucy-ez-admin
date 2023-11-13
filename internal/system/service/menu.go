@@ -81,8 +81,25 @@ func UpdateMenu(ctx *core.Context, in *types.UpdateMenuRequest) error {
 	// 之前不是接口, 现在修改为接口, 则进行 rbac 新增
 	if menu.Type != constants.MenuA && in.Type == constants.MenuA {
 		// 获取选中当前菜单的角色
-		// TODO: role menu
-		return nil
+		roleMenu := model.RoleMenu{}
+		roleMenus, _ := roleMenu.MenuRoles(ctx, in.ID)
+		if len(roleMenus) != 0 {
+			var roleIds []int64
+			for _, item := range roleMenus {
+				roleIds = append(roleIds, item.RoleID)
+			}
+
+			// 获取当前菜单的全部角色信息
+			role := model.Role{}
+			roles, _ := role.All(ctx, "id in ?", roleIds)
+
+			// 添加菜单到 rbac 权限表
+			var newPolices [][]string
+			for _, val := range roles {
+				newPolices = append(newPolices, []string{val.Keyword, in.Path, in.Method})
+			}
+			_, _ = ctx.Enforcer().Instance().AddPolicies(newPolices)
+		}
 	}
 
 	if err := inMenu.Update(ctx); err != nil {
