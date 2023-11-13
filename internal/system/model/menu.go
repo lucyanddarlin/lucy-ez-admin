@@ -3,9 +3,13 @@ package model
 import (
 	"time"
 
+	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
+	"github.com/lucyanddarlin/lucy-ez-admin/errors"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/proto"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
+	"gorm.io/gorm"
 )
 
 type Menu struct {
@@ -35,6 +39,46 @@ const (
 
 func (m *Menu) TableName() string {
 	return "tb_system_menu"
+}
+
+func (m *Menu) ID() int64 {
+	return m.BaseModel.ID
+}
+
+// Create 创建菜单
+func (m *Menu) Create(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	m.Operator = md.Username
+	m.OperatorID = md.UserID
+
+	if m.Type == constants.MenuBA {
+		tools.DelayDelCache(ctx.Redis().GetRedis(constants.Cache), RedisBaseApiKey)
+	}
+
+	// 创建菜单
+	return transferErr(database(ctx).Create(&m).Error)
+}
+
+// OneByName 通过 name 条件查询指定菜单
+func (m *Menu) OneByName(ctx *core.Context, name string) error {
+	return transferErr(database(ctx).First(m, "name = ?", name).Error)
+}
+
+// Update 更新菜单
+
+// UpdateMenuHome 更新菜单首页
+func (m *Menu) UpdateMenuHome(ctx *core.Context, menuID int64) error {
+	err := database(ctx).Table(m.TableName()).Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("id != ?", menuID).Update("is_home", false).Error; err != nil {
+			return err
+		}
+		return tx.Where("id = ?", menuID).Update("is_home", true).Error
+	})
+	return transferErr(err)
 }
 
 func (m *Menu) InitData(ctx *core.Context) error {

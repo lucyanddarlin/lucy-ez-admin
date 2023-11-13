@@ -18,7 +18,7 @@ func Init(engine *gin.RouterGroup) {
 		api.POST("/email/captcha", handler.EmailCaptcha)
 
 		// 菜单相关
-		api.POST("/menu")
+		api.POST("/menu", handler.AddMenu)
 
 		// 角色相关
 		api.GET("/roles", handler.AllRole)
