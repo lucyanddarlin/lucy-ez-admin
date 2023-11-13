@@ -37,3 +37,14 @@ func AddMenu(ctx *core.Context, in *types.AddMenuRequest) error {
 
 	return nil
 }
+
+// UpdateMenu 更新菜单
+func UpdateMenu(ctx *core.Context, in *types.UpdateMenuRequest) error {
+	menu := model.Menu{}
+
+	if copier.Copy(&menu, in) != nil {
+		return errors.AssignError
+	}
+
+	return menu.Update(ctx)
+}

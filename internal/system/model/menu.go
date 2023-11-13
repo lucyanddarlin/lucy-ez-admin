@@ -108,6 +108,18 @@ func (m *Menu) Tree(ctx *core.Context, cond ...interface{}) (tree.Tree, error) {
 }
 
 // Update 更新菜单
+func (m *Menu) Update(ctx *core.Context) error {
+
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	m.Operator = md.Username
+	m.OperatorID = md.UserID
+
+	return transferErr(database(ctx).Updates(m).Error)
+}
 
 // UpdateMenuHome 更新菜单首页
 func (m *Menu) UpdateMenuHome(ctx *core.Context, menuID int64) error {

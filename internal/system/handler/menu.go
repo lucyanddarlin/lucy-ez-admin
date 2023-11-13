@@ -37,3 +37,21 @@ func AddMenu(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// UpdateMenu 更新菜单
+func UpdateMenu(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.UpdateMenuRequest{}
+	if ctx.ShouldBindJSON(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.UpdateMenu(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}

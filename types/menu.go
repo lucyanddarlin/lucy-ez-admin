@@ -16,3 +16,21 @@ type AddMenuRequest struct {
 	IsCache    bool   `json:"is_cache"`
 	IsHome     bool   `json:"is_home"`
 }
+
+type UpdateMenuRequest struct {
+	ID         int64  `json:"id" binding:"required"`
+	ParentID   int64  `json:"parent_id `
+	Title      string `json:"title"`
+	Icon       string `json:"icon"`
+	Path       string `json:"path"`
+	Name       string `json:"name"`
+	Type       string `json:"type"`
+	Permission string `json:"permission"`
+	Method     string `json:"method"`
+	Component  string `json:"component"`
+	Redirect   string `json:"redirect"`
+	Weight     string `json:"weight"`
+	IsHIdden   bool   `json:"is_hidden"`
+	IsCache    bool   `json:"is_cache"`
+	IsHome     bool   `json:"is_home"`
+}

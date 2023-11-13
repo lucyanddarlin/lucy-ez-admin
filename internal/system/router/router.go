@@ -20,6 +20,7 @@ func Init(engine *gin.RouterGroup) {
 		// 菜单相关
 		api.GET("/menus", handler.AllMenu)
 		api.POST("/menu", handler.AddMenu)
+		api.PUT("/menu", handler.UpdateMenu)
 
 		// 角色相关
 		api.GET("/roles", handler.AllRole)
