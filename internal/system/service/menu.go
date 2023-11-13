@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/jinzhu/copier"
+	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
@@ -40,11 +41,58 @@ func AddMenu(ctx *core.Context, in *types.AddMenuRequest) error {
 
 // UpdateMenu 更新菜单
 func UpdateMenu(ctx *core.Context, in *types.UpdateMenuRequest) error {
-	menu := model.Menu{}
+	inMenu := model.Menu{}
 
-	if copier.Copy(&menu, in) != nil {
+	if copier.Copy(&inMenu, in) != nil {
 		return errors.AssignError
 	}
 
-	return menu.Update(ctx)
+	menu := model.Menu{}
+	if err := menu.OneByID(ctx, in.ID); err != nil {
+		return err
+	}
+
+	if in.ParentID != 0 && in.ID == in.ParentID {
+		return errors.MenuParentIdError
+	}
+
+	// TODO: 测试
+	if menu.Name != in.Name && menu.OneByName(ctx, in.Name) != nil {
+		return errors.DulMenuNameError
+	}
+
+	// 之前为接口, 现在修改类型不为接口, 则删除之前的 rbac 权限
+	if menu.Type == constants.MenuA && in.Type != constants.MenuA {
+		_, _ = ctx.Enforcer().Instance().RemoveFilteredPolicy(1, menu.Path, menu.Method)
+	}
+
+	// 之前和现在都为接口, 且存在方法或者逻辑变更时, 更新 rbac 权限
+	if menu.Type == constants.MenuA || in.Type == constants.MenuA && (menu.Method != in.Method || menu.Path != in.Path) {
+		oldPolices := ctx.Enforcer().Instance().GetFilteredPolicy(1, menu.Method, menu.Path)
+		if len(oldPolices) != 0 {
+			var newPolices [][]string
+			for _, val := range oldPolices {
+				newPolices = append(newPolices, []string{val[0], in.Path, in.Method})
+			}
+			_, _ = ctx.Enforcer().Instance().UpdatePolicies(oldPolices, newPolices)
+		}
+	}
+
+	// 之前不是接口, 现在修改为接口, 则进行 rbac 新增
+	if menu.Type != constants.MenuA && in.Type == constants.MenuA {
+		// 获取选中当前菜单的角色
+		// TODO: role menu
+		return nil
+	}
+
+	if err := inMenu.Update(ctx); err != nil {
+		return err
+	}
+
+	// 更新首页菜单
+	if inMenu.IsHome != menu.IsHome && inMenu.IsHome != nil && *inMenu.IsHome {
+		return inMenu.UpdateMenuHome(ctx, inMenu.ID())
+	}
+
+	return nil
 }

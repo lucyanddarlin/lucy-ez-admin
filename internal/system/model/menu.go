@@ -81,6 +81,11 @@ func (m *Menu) Create(ctx *core.Context) error {
 	return transferErr(database(ctx).Create(&m).Error)
 }
 
+// OneByID 用过 id 查询指定菜单
+func (m *Menu) OneByID(ctx *core.Context, id int64) error {
+	return transferErr(database(ctx).Find(m, "id = ?", id).Error)
+}
+
 // OneByName 通过 name 条件查询指定菜单
 func (m *Menu) OneByName(ctx *core.Context, name string) error {
 	return transferErr(database(ctx).First(m, "name = ?", name).Error)
