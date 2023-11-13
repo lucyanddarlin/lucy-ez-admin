@@ -113,3 +113,31 @@ func UpdateMenu(ctx *core.Context, in *types.UpdateMenuRequest) error {
 
 	return nil
 }
+
+// DeleteMenu 删除菜单
+func DeleteMenu(ctx *core.Context, in *types.DeleteMenuRequest) error {
+	if in.ID == 1 {
+		return errors.DeleteRootMenuError
+	}
+
+	// 获取指定 id 为根节点的菜单树
+	menu := model.Menu{}
+	list, _ := menu.All(ctx)
+	var treeList []tree.Tree
+	for _, item := range list {
+		treeList = append(treeList, item)
+	}
+	t := tree.BuildTreeByID(treeList, in.ID)
+
+	// 获取菜单树下所有的菜单 ID
+	ids := tree.GetTreeID(t)
+
+	// 删除当前 id 中的类型为 API 的 rbac 权限表
+	apiList, _ := menu.All(ctx, "id in ? and type='A'", ids)
+	for _, item := range apiList {
+		ctx.Enforcer().Instance().RemoveFilteredPolicy(1, item.Path, item.Method)
+	}
+
+	// 从数据库删除菜单
+	return menu.DeleteByIds(ctx, ids)
+}

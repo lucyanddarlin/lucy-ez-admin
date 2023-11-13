@@ -55,3 +55,21 @@ func UpdateMenu(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// DeleteMenu 删除菜单
+func DeleteMenu(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.DeleteMenuRequest{}
+	if ctx.ShouldBind(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.DeleteMenu(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}

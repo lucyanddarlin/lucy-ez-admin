@@ -137,6 +137,20 @@ func (m *Menu) UpdateMenuHome(ctx *core.Context, menuID int64) error {
 	return transferErr(err)
 }
 
+// DeleteByIds 通过条件删除菜单
+func (m *Menu) DeleteByIds(ctx *core.Context, ids []int64) error {
+	if err := database(ctx).First(m, "id in ?", ids).Error; err != nil {
+		return transferErr(err)
+	}
+
+	// 删除基础 Api 缓存
+	if m.Type == constants.MenuBA {
+		tools.DelayDelCache(ctx.Redis().GetRedis(constants.Cache), RedisBaseApiKey)
+	}
+
+	return transferErr(database(ctx).Delete(m).Error)
+}
+
 func (m *Menu) InitData(ctx *core.Context) error {
 	ins := []Menu{
 

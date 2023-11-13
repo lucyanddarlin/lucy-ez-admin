@@ -19,7 +19,7 @@ type AddMenuRequest struct {
 
 type UpdateMenuRequest struct {
 	ID         int64  `json:"id" binding:"required"`
-	ParentID   int64  `json:"parent_id `
+	ParentID   int64  `json:"parent_id"  binding:"required"`
 	Title      string `json:"title"`
 	Icon       string `json:"icon"`
 	Path       string `json:"path"`
@@ -33,4 +33,8 @@ type UpdateMenuRequest struct {
 	IsHIdden   bool   `json:"is_hidden"`
 	IsCache    bool   `json:"is_cache"`
 	IsHome     bool   `json:"is_home"`
+}
+
+type DeleteMenuRequest struct {
+	ID int64 `json:"id" form:"id" binding:"required"`
 }
