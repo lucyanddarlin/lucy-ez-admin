@@ -29,6 +29,11 @@ func Init(engine *gin.RouterGroup) {
 		api.PUT("/role", handler.UpdateRole)
 		api.DELETE("/role", handler.DeleteRole)
 
+		// 角色菜单相关
+		api.GET("/role/menu/ids", handler.RoleMenuIds)
+		api.GET("/role/menu", handler.RoleMenu)
+		api.PUT("/role/menu", handler.UpdateRoleMenu)
+
 		// 部门相关
 		api.GET("/teams", handler.AllTeam)
 		api.POST("/team", handler.AddTeam)
