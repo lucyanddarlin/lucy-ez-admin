@@ -52,6 +52,10 @@ func UpdateMenu(ctx *core.Context, in *types.UpdateMenuRequest) error {
 		return err
 	}
 
+	if menu.ID() == 0 {
+		return errors.NotExistMenuError
+	}
+
 	if in.ParentID != 0 && in.ID == in.ParentID {
 		return errors.MenuParentIdError
 	}

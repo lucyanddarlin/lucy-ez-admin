@@ -19,7 +19,7 @@ type AddMenuRequest struct {
 
 type UpdateMenuRequest struct {
 	ID         int64  `json:"id" binding:"required"`
-	ParentID   int64  `json:"parent_id"  binding:"required"`
+	ParentID   int64  `json:"parent_id"`
 	Title      string `json:"title"`
 	Icon       string `json:"icon"`
 	Path       string `json:"path"`

@@ -45,6 +45,7 @@ var (
 	DulMenuNameError    = &types.Response{Code: 1000030, Msg: "菜单name值不能重复"}
 	MenuParentIdError   = &types.Response{Code: 1000031, Msg: "父菜单id值异常"}
 	DeleteRootMenuError = &types.Response{Code: 1000032, Msg: "不能删除根菜单"}
+	NotExistMenuError   = &types.Response{Code: 1000033, Msg: "菜单 id 不存在"}
 
 	//team相关
 	NotAddTeamError      = &types.Response{Code: 1000040, Msg: "暂无此部门的下级部门创建权限"}
