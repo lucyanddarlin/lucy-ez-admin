@@ -174,3 +174,15 @@ func PageUser(c *gin.Context) {
 		ctx.RespList(total, list)
 	}
 }
+
+// UserMenus 获取用户的菜单列表
+func UserMenus(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	if resp, err := service.CurrentUserMenuTree(ctx); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespData(resp)
+	}
+}

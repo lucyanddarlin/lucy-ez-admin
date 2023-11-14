@@ -7,6 +7,7 @@ import (
 
 	"github.com/forgoer/openssl"
 	"github.com/jinzhu/copier"
+	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
@@ -353,4 +354,40 @@ func UpdateUserInfoByVerify(ctx *core.Context, in *types.UpdateUserInfoByVerifyR
 		user.Email = in.Email
 	}
 	return user.Update(ctx)
+}
+
+// CurrentUserMenuTree 获取当前用户的菜单树
+func CurrentUserMenuTree(ctx *core.Context) (tree.Tree, error) {
+	md := ctx.Metadata()
+	if md == nil {
+		return nil, errors.MetadataError
+	}
+
+	// 如果是超级管理员就直接返回全部菜单
+	if md.RoleKey == constants.JwtSuperAdmin {
+		return AllMenu(ctx)
+	}
+
+	// 查询角色所属菜单
+	rm := model.RoleMenu{}
+	rmList, err := rm.RoleMenus(ctx, md.RoleID)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取菜单的所有 id
+	var ids []int64
+	for _, item := range rmList {
+		ids = append(ids, item.MenuID)
+	}
+
+	// 获取指定 id 的所有菜单
+	var menu model.Menu
+	menuList, _ := menu.All(ctx, "id in ?", ids)
+	var listTree []tree.Tree
+	for _, item := range menuList {
+		listTree = append(listTree, item)
+	}
+
+	return tree.BuildTree(listTree), nil
 }
