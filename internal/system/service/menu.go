@@ -60,8 +60,7 @@ func UpdateMenu(ctx *core.Context, in *types.UpdateMenuRequest) error {
 		return errors.MenuParentIdError
 	}
 
-	// TODO: 测试
-	if menu.Name != in.Name && menu.OneByName(ctx, in.Name) != nil {
+	if menu.Name != in.Name && menu.OneByName(ctx, in.Name) == nil {
 		return errors.DulMenuNameError
 	}
 
