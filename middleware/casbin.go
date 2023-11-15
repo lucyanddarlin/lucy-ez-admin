@@ -5,6 +5,7 @@ import (
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
+	"github.com/lucyanddarlin/lucy-ez-admin/internal/system/model"
 )
 
 func Enforcer() gin.HandlerFunc {
@@ -26,7 +27,11 @@ func Enforcer() gin.HandlerFunc {
 			return
 		}
 
-		// TODO: 基础 API 放行
+		//  基础 API 放行
+		menu := model.Menu{}
+		if menu.IsBaseApiPath(ctx, method, path) {
+			return
+		}
 
 		// 权限判断
 		if is, _ := ctx.Enforcer().Instance().Enforce(md.RoleKey, path, method); !is {

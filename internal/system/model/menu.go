@@ -1,12 +1,15 @@
 package model
 
 import (
+	"encoding/json"
+	"strings"
 	"time"
 
 	"github.com/lucyanddarlin/lucy-ez-admin/constants"
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
 	"github.com/lucyanddarlin/lucy-ez-admin/errors"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools"
+	"github.com/lucyanddarlin/lucy-ez-admin/tools/lock"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/proto"
 	"github.com/lucyanddarlin/lucy-ez-admin/tools/tree"
 	"github.com/lucyanddarlin/lucy-ez-admin/types"
@@ -79,6 +82,47 @@ func (m *Menu) Create(ctx *core.Context) error {
 
 	// 创建菜单
 	return transferErr(database(ctx).Create(&m).Error)
+}
+
+func (m *Menu) IsBaseApiPath(ctx *core.Context, method, path string) bool {
+	lockKey := RedisBaseApiKey + "_lock"
+
+	redis := ctx.Redis().GetRedis(constants.Cache)
+
+	lc := lock.NewLockWithDuration(redis, lockKey, 10*time.Second)
+	defer lc.Release()
+
+	data := map[string]bool{}
+	err := lc.AcquiredFunc(
+		func() error {
+			if str, err := redis.Get(ctx, RedisBaseApiKey).Result(); err != nil {
+				return err
+			} else {
+				return json.Unmarshal([]byte(str), &data)
+			}
+		},
+		func() error {
+			list, err := m.All(ctx, "type = ?", constants.MenuBA)
+			if err != nil {
+				return err
+			}
+
+			// 转换格式
+			for _, val := range list {
+				data[strings.ToLower(val.Method+":"+val.Path)] = true
+			}
+
+			// 将数据库的数据存入缓存
+			b, _ := json.Marshal(data)
+			redis.Set(ctx, RedisBaseApiKey, string(b), 1*time.Hour)
+			return nil
+		})
+
+	if err != nil {
+		return false
+	}
+
+	return data[strings.ToLower(method+":"+path)]
 }
 
 // OneByID 用过 id 查询指定菜单
