@@ -37,6 +37,16 @@ func (n *Notice) Create(ctx *core.Context) error {
 	return transferErr(database(ctx).Create(n).Error)
 }
 
+// Update 更新通知
+func (n *Notice) Update(ctx *core.Context) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	return transferErr(database(ctx).Updates(n).Error)
+}
+
 func (n *Notice) InitData(ctx *core.Context) error {
 	return nil
 }

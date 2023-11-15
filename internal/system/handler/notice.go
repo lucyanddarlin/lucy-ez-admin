@@ -25,3 +25,21 @@ func AddNotice(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// UpdateNotice 更新通知
+func UpdateNotice(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.UpdateNoticeRequest{}
+	if ctx.ShouldBindJSON(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.UpdateNotice(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+}
