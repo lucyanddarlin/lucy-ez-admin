@@ -55,5 +55,9 @@ func Init(engine *gin.RouterGroup) {
 		api.POST("/user/logout", handler.UserLogout)
 		api.POST("/token/refresh", handler.RefreshToken)
 		api.GET("/login/log", handler.LoginLog)
+
+		// 系统通知相关
+		api.POST("/notice", handler.AddNotice)
+
 	}
 }
