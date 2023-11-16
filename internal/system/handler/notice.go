@@ -43,3 +43,22 @@ func UpdateNotice(c *gin.Context) {
 		ctx.RespSuccess()
 	}
 }
+
+// DeleteNotice 删除通知
+func DeleteNotice(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.DeleteNoticeRequest{}
+	if ctx.ShouldBindJSON(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if err := service.DeleteNotice(ctx, &in);err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespSuccess()
+	}
+
+}

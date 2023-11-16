@@ -32,3 +32,10 @@ func UpdateNotice(ctx *core.Context, in *types.UpdateNoticeRequest) error {
 
 	return notice.Update(ctx)
 }
+
+// DeleteNotice 删除通知
+func DeleteNotice(ctx *core.Context, in *types.DeleteNoticeRequest) error {
+	notice := model.Notice{}
+
+	return notice.DeleteByID(ctx, in.ID)
+}

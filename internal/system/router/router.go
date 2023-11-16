@@ -59,5 +59,6 @@ func Init(engine *gin.RouterGroup) {
 		// 系统通知相关
 		api.POST("/notice", handler.AddNotice)
 		api.PUT("/notice", handler.UpdateNotice)
+		api.DELETE("/notice", handler.DeleteNotice)
 	}
 }

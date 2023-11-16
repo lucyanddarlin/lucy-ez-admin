@@ -47,6 +47,11 @@ func (n *Notice) Update(ctx *core.Context) error {
 	return transferErr(database(ctx).Updates(n).Error)
 }
 
+// DeleteByID 根据 ID 删除通知
+func (n *Notice) DeleteByID(ctx *core.Context, id int64) error {
+	return transferErr(database(ctx).Delete(n, id).Error)
+}
+
 func (n *Notice) InitData(ctx *core.Context) error {
 	return nil
 }

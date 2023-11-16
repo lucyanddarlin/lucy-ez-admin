@@ -13,3 +13,7 @@ type UpdateNoticeRequest struct {
 	Content string `json:"content"`
 	Status  *bool  `json:"status"`
 }
+
+type DeleteNoticeRequest struct {
+	ID int64 `json:"id" binding:"required"`
+}
