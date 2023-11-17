@@ -55,10 +55,58 @@ func DeleteNotice(c *gin.Context) {
 		return
 	}
 
-	if err := service.DeleteNotice(ctx, &in);err != nil {
+	if err := service.DeleteNotice(ctx, &in); err != nil {
 		ctx.RespError(err)
 	} else {
 		ctx.RespSuccess()
 	}
 
+}
+
+// PageNotice 分页获取系统通知列表
+func PageNotice(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.PageNoticeRequest{}
+	if ctx.ShouldBind(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if list, total, err := service.PageNotice(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespList(total, list)
+	}
+}
+
+// GetNotice 获取通知信息
+func GetNotice(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	in := types.GetNoticeRequest{}
+	if ctx.ShouldBind(&in) != nil {
+		ctx.RespError(errors.ParamsError)
+		return
+	}
+
+	if data, err := service.GetNotice(ctx, &in); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespData(data)
+	}
+}
+
+// GetNoticeUnReadNum 获取未读通知的总数
+func GetNoticeUnReadNum(c *gin.Context) {
+	ctx := core.New(c)
+	defer ctx.Release()
+
+	if data, err := service.GetNoticeUnReadNum(ctx); err != nil {
+		ctx.RespError(err)
+	} else {
+		ctx.RespData(data)
+	}
 }

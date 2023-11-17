@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/lucyanddarlin/lucy-ez-admin/core"
@@ -50,6 +51,70 @@ func (n *Notice) Update(ctx *core.Context) error {
 // DeleteByID 根据 ID 删除通知
 func (n *Notice) DeleteByID(ctx *core.Context, id int64) error {
 	return transferErr(database(ctx).Delete(n, id).Error)
+}
+
+// Page 查询分页数据
+func (n *Notice) Page(ctx *core.Context, options types.PageOptions) ([]*Notice, int64, error) {
+	list, total := make([]*Notice, 0), int64(0)
+
+	db := database(ctx).Model(n)
+
+	if options.Model != nil {
+		db = ctx.Orm().GormWhere(db, n.TableName(), options.Model)
+	}
+
+	if options.Scopes != nil {
+		db = db.Scopes(options.Scopes)
+	}
+
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	db = db.Select("id,type,title,status,operator,operator_id,created_at,updated_at,read_at")
+	db = db.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
+
+	return list, total, db.Find(&list).Error
+}
+
+// OneByID 根据 ID 获取通知信息
+func (n *Notice) OneByID(ctx *core.Context, id int64) error {
+	md := ctx.Metadata()
+	if md == nil {
+		return errors.MetadataError
+	}
+
+	nu := NoticeUser{
+		UserID:   md.UserID,
+		NoticeID: id,
+		ReadAt:   time.Now().Unix(),
+	}
+
+	_ = nu.Create(ctx)
+
+	return transferErr(database(ctx).Find(n, id).Error)
+}
+
+// UnreadNum 获取未读通知数量
+func (n *Notice) UnreadNum(ctx *core.Context) (int64, error) {
+	md := ctx.Metadata()
+	if md == nil {
+		return 0, errors.MetadataError
+	}
+
+	nu := NoticeUser{}
+	db := database(ctx).Model(n)
+
+	join := fmt.Sprintf("left join %s on %s.notice_id=%s.id and %s.user_id=%d",
+		nu.TableName(),
+		nu.TableName(),
+		n.TableName(),
+		nu.TableName(),
+		md.UserID,
+	)
+
+	total := int64(0)
+	return total, db.Joins(join).Where(fmt.Sprintf("status=true and %v.user_id is null", nu.TableName())).Count(&total).Error
 }
 
 func (n *Notice) InitData(ctx *core.Context) error {

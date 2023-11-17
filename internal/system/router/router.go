@@ -60,5 +60,8 @@ func Init(engine *gin.RouterGroup) {
 		api.POST("/notice", handler.AddNotice)
 		api.PUT("/notice", handler.UpdateNotice)
 		api.DELETE("/notice", handler.DeleteNotice)
+		api.GET("/notices", handler.PageNotice)
+		api.GET("/notice", handler.GetNotice)
+		api.GET("/notice/unread_num", handler.GetNoticeUnReadNum)
 	}
 }

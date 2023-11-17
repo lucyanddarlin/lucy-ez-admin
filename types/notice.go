@@ -17,3 +17,17 @@ type UpdateNoticeRequest struct {
 type DeleteNoticeRequest struct {
 	ID int64 `json:"id" binding:"required"`
 }
+
+type PageNoticeRequest struct {
+	Page     int    `json:"page" form:"page" binding:"required" sql:"-"`
+	PageSize int    `json:"page_size" form:"page_size" binding:"required,max=50" sql:"-"`
+	Title    string `json:"title" form:"title" sql:"like '%?%'"`
+	Status   *bool  `json:"status" form:"status"`
+	IsRead   *bool  `json:"is_read" form:"is_read" sql:"-"`
+	Start    int64  `json:"start" form:"start" sql:"> ?" column:"created_at"`
+	End      int64  `json:"end" form:"end" sql:"< ?" column:"created_at"`
+}
+
+type GetNoticeRequest struct {
+	ID int64 `json:"id" form:"id" binding:"required"`
+}

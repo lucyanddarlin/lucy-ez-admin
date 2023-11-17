@@ -27,6 +27,7 @@ func Init() {
 			&model.Menu{},
 			&model.RoleMenu{},
 			&model.Notice{},
+			&model.NoticeUser{},
 		},
 		db: core.GlobalOrm().GetDB(model.DBName()),
 	}
