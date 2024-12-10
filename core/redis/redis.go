@@ -23,7 +23,7 @@ type Redis interface {
 	//  @return *redis.Client
 	//  @return error
 	Get(name string) (*redis.Client, error)
-	// Get
+	// GetRedis
 	//
 	//  @Description: 获取指定名称的 redis 实例, 如果实例不存在则返回 nil
 	//  @param 实例名称
@@ -72,7 +72,7 @@ func (r *rd) Get(name string) (*redis.Client, error) {
 	return r.m[name], nil
 }
 
-// GetName implements Redis.
+// GetRedis implements Redis.
 func (r *rd) GetRedis(name string) *redis.Client {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
